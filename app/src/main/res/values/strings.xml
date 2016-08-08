@@ -1,0 +1,62 @@
+<resources>
+
+    <string name="app_name">ECG-Analyzer</string>
+    <string name="Descript_photo_cover">cover</string>
+    <string name="example">Example</string>
+    <string name="takePhoto">Take Photo</string>
+    <string name="searchPhoto">Search Photo</string>
+    <string name="sett">Settings</string>
+    <string name="Nulo"></string>
+    <string name="howTo">How to</string>
+    <string name="About">About</string>
+    <string name="AboutText">Universidad Rey Juan Carlos\nTFG: Aplicación para Obtención de Señal Cardíaca desde Imagen Digital de ECG\nTutora: Inmaculada Mora\nAuthor: Adrián Pizarro</string>
+    <string name="HowToText">1-Coloca el ECG sobre una superficie plana.\n2-Pulsa en Take Photo para activar la cámara.\n3-Coloca el movil en paralelo al ECG a una distancia de unos 20cm.\n4-Toca la pantalla para echar la foto y comenzar a obtener la señal cardiaca.</string>
+    <string name="Grid">Grid Photo</string>
+
+    <string name="CantOpen">Can not open the folder</string>
+    <string name="OptionsMenuFMC">Options</string>
+    <string name="OptionsMenuFMAnalyze">Analyze</string>
+    <string name="OptionsMenuFMView">View</string>
+    <string name="OptionsMenuFMCancel">Cancel</string>
+    <string name="OptionsMenuFMDelete">Delete</string>
+    <string name="OptionsMenuFMDeleteAll">Delete All</string>
+    <string name="OptionsMenuFMRen">Rename</string>
+
+    <string name="LongCLick">Long click to see options</string>
+    <string name="PhotoSaved">Photo saved, touch options</string>
+    <string name="PhotoDisc">Photo deleted</string>
+    <string name="PhotoRen">Photo renamed and saved: /mnt/sdcard/ECG-Analyzer</string>
+    <string name="SavedPref">Saved</string>
+
+    <string name="ChooseOp">Choose one:</string>
+    <string name="PhotoRenFail">Invalid extension(.jpg .png)</string>
+    <string name="MustHoriz">Must be horizontal to the floor (green)</string>
+
+    <string name="SetTitle">Image Settings</string>
+    <string name="SetFormTitle">Format</string>
+    <string name="SetFormSum">Select the image format</string>
+    <string name="SetCalTitle">Size</string>
+    <string name="SetCalSum">Select the image size</string>
+    <string name="SetCompTitle">Compress</string>
+    <string name="SetCompSum">Select the compression level</string>
+    <string name="SetFlashTitle">Flash</string>
+    <string name="SetFlashSum">Turn on/off flash</string>
+
+    <string name="Continue">Continue</string>
+    <string name="Log">Log</string>
+    <string name="Optimal">Optimal</string>
+
+    <string name="TenS">10 s</string>
+    <string name="veinticincoS">25 mm/s</string>
+    <string name="CincuentaS">50 mm/s</string>
+    <string name="milisV">  mm/mV</string>
+    <string name="ten">  10</string>
+
+    <string name="TotalTime">Total Time:</string>
+    <string name="VelocPaper">Paper Velocity:</string>
+    <string name="VoltageMeasure">Voltage Measure:</string>
+    <string name="MustIntro">Please intro a Voltage Measure</string>
+    <string name="NotInRangeVolt">Voltage Measure must be between 5 and 20</string>
+
+
+</resources>
