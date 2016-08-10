@@ -6,5 +6,8 @@
 /build
 /captures
 *.iml
-lib/opencv/build/intermediates/bundles/debug/classes.jar
+lib/opencv/*
+/lib/opencv/*
 *.class
+.idea/*
+/.idea/*
