@@ -1,0 +1,9 @@
+-Ajustar el grid a cada resolución
+
+- Tener un Grid correcto dependiendo de la resolución y la métrica
+
+- Si esto no es 100% bueno, hacer algo parecido, pero seguir avanzado con el recortado de derivaciones
+
+- Pensar en como hacer este recortado
+
+- Leer el TFG de Lozano
