@@ -5,3 +5,6 @@
 .DS_Store
 /build
 /captures
+*.iml
+lib/opencv/build/intermediates/bundles/debug/classes.jar
+*.class
