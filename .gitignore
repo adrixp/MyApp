@@ -1,4 +1,6 @@
 .gradle
+.idea
+*.class
 /local.properties
 /.idea/workspace.xml
 /.idea/libraries
@@ -8,6 +10,5 @@
 *.iml
 lib/opencv/*
 /lib/opencv/*
-*.class
 .idea/*
 /.idea/*
