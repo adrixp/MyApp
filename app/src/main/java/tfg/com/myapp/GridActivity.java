@@ -64,6 +64,9 @@ public class GridActivity extends Activity implements CvCameraViewListener2, OnT
         folder = new File(Environment.getExternalStorageDirectory()	+ "/ECG-Analyzer/tmp" );
         if(!folder.isDirectory()){
             if(folder.mkdir()){
+                Log.i(TAG, "Folder created successfully");
+            }else{
+                Log.i(TAG, "Folder couldn't be created");
             }
         }
     }
@@ -156,7 +159,11 @@ public class GridActivity extends Activity implements CvCameraViewListener2, OnT
                 deleteFile(sub);
             }
         }
-        element.delete();
+        if(element.delete()){
+            Log.i(TAG, "Folder deleted successfully");
+        }else{
+            Log.i(TAG, "Couldn't delete this folder");
+        }
     }
 
     public void onCameraViewStarted(int width, int height) {

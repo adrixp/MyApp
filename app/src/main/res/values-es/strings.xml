@@ -50,5 +50,9 @@
     <string name="VoltageMeasure">Medida de voltaje:</string>
     <string name="MustIntro">Por favor introduce una Medida de voltaje</string>
     <string name="NotInRangeVolt">Medida de voltaj debe estar entre 5 y 20</string>
+
+	<string name="picture">Foto</string>
+	<string name="request_permission">Esta aplicación necesita permisos de la cámara.</string>
+	<string name="camera_error">Este dispositivo no soporta Camera2 API.</string>
 	
 </resources>

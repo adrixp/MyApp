@@ -38,7 +38,7 @@ public class Menu extends Activity{
 	}
 	
 	public void log(View view) {
-		Intent i = new Intent(this, ShowLog.class);
+		Intent i = new Intent(this, GridActivityCamOpBeta.class);
 		startActivity(i);
 	}
 
