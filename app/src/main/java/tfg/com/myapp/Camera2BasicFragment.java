@@ -28,6 +28,7 @@ import android.hardware.camera2.params.StreamConfigurationMap;
 import android.media.Image;
 import android.media.ImageReader;
 import android.os.Bundle;
+import android.os.Environment;
 import android.os.Handler;
 import android.os.HandlerThread;
 import android.support.annotation.NonNull;
@@ -36,6 +37,7 @@ import android.util.Log;
 import android.util.Size;
 import android.util.SparseIntArray;
 import android.view.LayoutInflater;
+import android.view.MotionEvent;
 import android.view.Surface;
 import android.view.TextureView;
 import android.view.View;
@@ -46,11 +48,14 @@ import java.io.File;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.nio.ByteBuffer;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collections;
 import java.util.Comparator;
+import java.util.Date;
 import java.util.List;
+import java.util.Locale;
 import java.util.concurrent.Semaphore;
 import java.util.concurrent.TimeUnit;
 
@@ -59,7 +64,7 @@ import java.util.concurrent.TimeUnit;
  */
 
 public class Camera2BasicFragment extends Fragment
-        implements View.OnClickListener {
+        implements  View.OnTouchListener {
 
     /**
      * Conversion from screen rotation to JPEG orientation.
@@ -378,8 +383,8 @@ public class Camera2BasicFragment extends Fragment
         int w = aspectRatio.getWidth();
         int h = aspectRatio.getHeight();
         for (Size option : choices) {
-            if (option.getWidth() <= maxWidth && option.getHeight() <= maxHeight &&
-                    option.getHeight() == option.getWidth() * h / w) {
+            if (option.getWidth() <= maxWidth && option.getHeight() <= maxHeight
+                    && option.getHeight() == option.getWidth() * h / w) { //   Le quito esto del if para fullscreen: && option.getHeight() == option.getWidth() * h / w
                 if (option.getWidth() >= textureViewWidth &&
                         option.getHeight() >= textureViewHeight) {
                     bigEnough.add(option);
@@ -413,7 +418,7 @@ public class Camera2BasicFragment extends Fragment
 
     @Override
     public void onViewCreated(final View view, Bundle savedInstanceState) {
-        view.findViewById(R.id.picture).setOnClickListener(this);
+        //view.findViewById(R.id.picture).setOnClickListener(this);
         //view.findViewById(R.id.info).setOnClickListener(this);
         mTextureView = (AutoFitTextureView) view.findViewById(R.id.texture);
     }
@@ -421,7 +426,22 @@ public class Camera2BasicFragment extends Fragment
     @Override
     public void onActivityCreated(Bundle savedInstanceState) {
         super.onActivityCreated(savedInstanceState);
-        mFile = new File(getActivity().getExternalFilesDir(null), "pic.jpg");
+        SimpleDateFormat sdf = new SimpleDateFormat("dd-MM-yyyy_HH-mm-ss", Locale.GERMAN);
+        String nameFolder = sdf.format(new Date());
+
+        File folder = new File(Environment.getExternalStorageDirectory()	+ "/ECG-Analyzer/" + nameFolder);
+        if(!folder.isDirectory()) {
+            if (folder.mkdir()) {
+                String path = Environment.getExternalStorageDirectory().getPath() +
+                        "/ECG-Analyzer/" + nameFolder;
+
+                String name = "ECG.jpg";
+
+
+                mFile = new File(path, name);
+
+            }
+        }
     }
 
     @Override
@@ -549,12 +569,14 @@ public class Camera2BasicFragment extends Fragment
                     maxPreviewHeight = MAX_PREVIEW_HEIGHT;
                 }
 
+
                 // Danger, W.R.! Attempting to use too large a preview size could  exceed the camera
                 // bus' bandwidth limitation, resulting in gorgeous previews but the storage of
                 // garbage capture data.
                 mPreviewSize = chooseOptimalSize(map.getOutputSizes(SurfaceTexture.class),
                         rotatedPreviewWidth, rotatedPreviewHeight, maxPreviewWidth,
                         maxPreviewHeight, largest);
+
 
                 // We fit the aspect ratio of TextureView to the size of preview we picked.
                 int orientation = getResources().getConfiguration().orientation;
@@ -666,7 +688,7 @@ public class Camera2BasicFragment extends Fragment
 
             // We configure the size of default buffer to be the size of camera preview we want.
             texture.setDefaultBufferSize(mPreviewSize.getWidth(), mPreviewSize.getHeight());
-
+            showToast(" w:" + mPreviewSize.getWidth() + " h: "+ mPreviewSize.getHeight());
             // This is the output Surface we need to start preview.
             Surface surface = new Surface(texture);
 
@@ -870,14 +892,12 @@ public class Camera2BasicFragment extends Fragment
         }
     }
 
+
     @Override
-    public void onClick(View view) {
-        switch (view.getId()) {
-            case R.id.picture: {
-                takePicture();
-                break;
-            }
-        }
+    public boolean onTouch(View v, MotionEvent event) {
+        showToast("touched asdasd");
+        takePicture();
+        return false;
     }
 
     private void setAutoFlash(CaptureRequest.Builder requestBuilder) {
