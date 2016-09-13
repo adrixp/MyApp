@@ -27,8 +27,8 @@ public class Cover extends Activity {
                 
             // transition from splash to main menu.
             //spashfadeout = max splash_dispaly_length
-            //activityfadein = max splash_dispaly_length / 2
-            overridePendingTransition(R.layout.activityfadein,
+            //splashfadein = max splash_dispaly_length / 2
+            overridePendingTransition(R.layout.splashfadein,
                     R.layout.splashfadeout);
             }
         }, SPLASH_DISPLAY_LENGTH);
