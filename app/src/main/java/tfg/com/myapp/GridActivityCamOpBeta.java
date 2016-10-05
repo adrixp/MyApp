@@ -17,7 +17,5 @@ public class GridActivityCamOpBeta extends Activity {
                     .replace(R.id.container, Camera2BasicFragment.newInstance())
                     .commit();
         }
-
-
     }
 }

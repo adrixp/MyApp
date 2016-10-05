@@ -64,7 +64,7 @@ import java.util.concurrent.TimeUnit;
  */
 
 public class Camera2BasicFragment extends Fragment
-        implements  View.OnTouchListener {
+        implements  View.OnClickListener {
 
     /**
      * Conversion from screen rotation to JPEG orientation.
@@ -419,8 +419,19 @@ public class Camera2BasicFragment extends Fragment
     @Override
     public void onViewCreated(final View view, Bundle savedInstanceState) {
         //view.findViewById(R.id.picture).setOnClickListener(this);
-        //view.findViewById(R.id.info).setOnClickListener(this);
+        view.findViewById(R.id.picture).setOnClickListener(this);
         mTextureView = (AutoFitTextureView) view.findViewById(R.id.texture);
+    }
+
+    @Override
+    public void onClick(View view) {
+        switch (view.getId()) {
+            case R.id.picture: {
+                showToast("touched asdasd");
+                //takePicture();
+                break;
+            }
+        }
     }
 
     @Override
@@ -892,14 +903,6 @@ public class Camera2BasicFragment extends Fragment
         }
     }
 
-
-    @Override
-    public boolean onTouch(View v, MotionEvent event) {
-        showToast("touched asdasd");
-        takePicture();
-        return false;
-    }
-
     private void setAutoFlash(CaptureRequest.Builder requestBuilder) {
         if (mFlashSupported) {
             requestBuilder.set(CaptureRequest.CONTROL_AE_MODE,
@@ -995,6 +998,8 @@ public class Camera2BasicFragment extends Fragment
         }
 
     }
+
+
 
     /**
      * Shows OK/Cancel confirmation dialog about camera permission.
