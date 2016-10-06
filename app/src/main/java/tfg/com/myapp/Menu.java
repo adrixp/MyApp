@@ -3,13 +3,23 @@ package tfg.com.myapp;
 import android.app.Activity;
 import android.content.Intent;
 import android.os.Bundle;
+import android.os.Environment;
 import android.view.View;
+
+import java.io.File;
 
 public class Menu extends Activity{
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
         setContentView(R.layout.layout_menu);
+
+		File folder = new File(Environment.getExternalStorageDirectory()	+ "/ECG-Analyzer");
+		if(!folder.isDirectory()) {
+			if (folder.mkdir()) {
+				System.out.println("Se ha creado el directorio ECG-Analyzer");
+			}
+		}
 	}
 	
 	public void openCam(View view) {

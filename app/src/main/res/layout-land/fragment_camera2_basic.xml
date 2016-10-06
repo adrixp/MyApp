@@ -1,7 +1,10 @@
 <?xml version="1.0" encoding="utf-8"?>
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
-    android:layout_height="match_parent">
+    android:layout_height="match_parent"
+    android:background="@drawable/take_foto_border_red"
+    android:id="@+id/rlcamera"
+    android:padding="3dp">
 
     <tfg.com.myapp.AutoFitTextureView
         android:id="@+id/texture"
@@ -18,6 +21,7 @@
         android:layout_alignParentBottom="true"
         android:layout_alignParentEnd="true"
         android:layout_alignParentTop="true"
+        android:background="@color/colorblack"
         android:layout_toRightOf="@id/texture"
         android:orientation="horizontal">
 

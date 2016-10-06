@@ -15,6 +15,10 @@ import android.graphics.Matrix;
 import android.graphics.Point;
 import android.graphics.RectF;
 import android.graphics.SurfaceTexture;
+import android.hardware.Sensor;
+import android.hardware.SensorEvent;
+import android.hardware.SensorEventListener;
+import android.hardware.SensorManager;
 import android.hardware.camera2.CameraAccessException;
 import android.hardware.camera2.CameraCaptureSession;
 import android.hardware.camera2.CameraCharacteristics;
@@ -37,11 +41,11 @@ import android.util.Log;
 import android.util.Size;
 import android.util.SparseIntArray;
 import android.view.LayoutInflater;
-import android.view.MotionEvent;
 import android.view.Surface;
 import android.view.TextureView;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.RelativeLayout;
 import android.widget.Toast;
 
 import java.io.File;
@@ -59,12 +63,14 @@ import java.util.Locale;
 import java.util.concurrent.Semaphore;
 import java.util.concurrent.TimeUnit;
 
+import static android.content.Context.SENSOR_SERVICE;
+
 /**
  * Created by PIZARROSAEXT on 05/09/2016.
  */
 
 public class Camera2BasicFragment extends Fragment
-        implements  View.OnClickListener {
+        implements  View.OnClickListener ,SensorEventListener {
 
     /**
      * Conversion from screen rotation to JPEG orientation.
@@ -79,6 +85,18 @@ public class Camera2BasicFragment extends Fragment
         ORIENTATIONS.append(Surface.ROTATION_180, 270);
         ORIENTATIONS.append(Surface.ROTATION_270, 180);
     }
+
+    //Variables para pitch and roll
+    private SensorManager sManager;
+    float Rot[] = null; //for gravity rotational data
+    float I[] = null; //for magnetic rotational data
+    float accels[] = new float[3];
+    float mags[] = new float[3];
+    float[] values = new float[3];
+
+    float pitch;
+    boolean isRed = true;
+    boolean inRange = false;
 
     /**
      * Tag for the {@link Log}.
@@ -195,6 +213,7 @@ public class Camera2BasicFragment extends Fragment
 
         @Override
         public void onError(@NonNull CameraDevice cameraDevice, int error) {
+            showToast("Error aplication");
             mCameraOpenCloseLock.release();
             cameraDevice.close();
             mCameraDevice = null;
@@ -222,11 +241,6 @@ public class Camera2BasicFragment extends Fragment
     private ImageReader mImageReader;
 
     /**
-     * This is the output file for our picture.
-     */
-    private File mFile;
-
-    /**
      * This a callback object for the {@link ImageReader}. "onImageAvailable" will be called when a
      * still image is ready to be saved.
      */
@@ -235,7 +249,7 @@ public class Camera2BasicFragment extends Fragment
 
         @Override
         public void onImageAvailable(ImageReader reader) {
-            mBackgroundHandler.post(new ImageSaver(reader.acquireNextImage(), mFile));
+            mBackgroundHandler.post(new ImageSaver(reader.acquireNextImage()));
         }
 
     };
@@ -413,6 +427,7 @@ public class Camera2BasicFragment extends Fragment
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
+
         return inflater.inflate(R.layout.fragment_camera2_basic, container, false);
     }
 
@@ -427,8 +442,11 @@ public class Camera2BasicFragment extends Fragment
     public void onClick(View view) {
         switch (view.getId()) {
             case R.id.picture: {
-                showToast("touched asdasd");
-                //takePicture();
+                if(inRange) {
+                    takePicture();
+                }else{
+                    showToast(getString(R.string.MustHoriz));
+                }
                 break;
             }
         }
@@ -437,28 +455,16 @@ public class Camera2BasicFragment extends Fragment
     @Override
     public void onActivityCreated(Bundle savedInstanceState) {
         super.onActivityCreated(savedInstanceState);
-        SimpleDateFormat sdf = new SimpleDateFormat("dd-MM-yyyy_HH-mm-ss", Locale.GERMAN);
-        String nameFolder = sdf.format(new Date());
-
-        File folder = new File(Environment.getExternalStorageDirectory()	+ "/ECG-Analyzer/" + nameFolder);
-        if(!folder.isDirectory()) {
-            if (folder.mkdir()) {
-                String path = Environment.getExternalStorageDirectory().getPath() +
-                        "/ECG-Analyzer/" + nameFolder;
-
-                String name = "ECG.jpg";
-
-
-                mFile = new File(path, name);
-
-            }
-        }
+        sManager = (SensorManager) getActivity().getSystemService(Context.SENSOR_SERVICE);
     }
 
     @Override
     public void onResume() {
         super.onResume();
         startBackgroundThread();
+
+        sManager.registerListener(this, sManager.getDefaultSensor(Sensor.TYPE_ACCELEROMETER), SensorManager.SENSOR_DELAY_NORMAL);
+        sManager.registerListener(this, sManager.getDefaultSensor(Sensor.TYPE_MAGNETIC_FIELD), SensorManager.SENSOR_DELAY_NORMAL);
 
         // When the screen is turned off and turned back on, the SurfaceTexture is already
         // available, and "onSurfaceTextureAvailable" will not be called. In that case, we can open
@@ -473,6 +479,7 @@ public class Camera2BasicFragment extends Fragment
 
     @Override
     public void onPause() {
+        sManager.unregisterListener(this);
         closeCamera();
         stopBackgroundThread();
         super.onPause();
@@ -588,7 +595,6 @@ public class Camera2BasicFragment extends Fragment
                         rotatedPreviewWidth, rotatedPreviewHeight, maxPreviewWidth,
                         maxPreviewHeight, largest);
 
-
                 // We fit the aspect ratio of TextureView to the size of preview we picked.
                 int orientation = getResources().getConfiguration().orientation;
                 if (orientation == Configuration.ORIENTATION_LANDSCAPE) {
@@ -699,7 +705,7 @@ public class Camera2BasicFragment extends Fragment
 
             // We configure the size of default buffer to be the size of camera preview we want.
             texture.setDefaultBufferSize(mPreviewSize.getWidth(), mPreviewSize.getHeight());
-            showToast(" w:" + mPreviewSize.getWidth() + " h: "+ mPreviewSize.getHeight());
+            //showToast(" w:" + mPreviewSize.getWidth() + " h: "+ mPreviewSize.getHeight());
             // This is the output Surface we need to start preview.
             Surface surface = new Surface(texture);
 
@@ -855,8 +861,10 @@ public class Camera2BasicFragment extends Fragment
                 public void onCaptureCompleted(@NonNull CameraCaptureSession session,
                                                @NonNull CaptureRequest request,
                                                @NonNull TotalCaptureResult result) {
-                    showToast("Saved: " + mFile);
-                    Log.d(TAG, mFile.toString());
+                    SimpleDateFormat sdf = new SimpleDateFormat("dd-MM-yyyy_HH-mm-ss", Locale.GERMAN);
+                    String nameFolder = sdf.format(new Date());
+                    showToast("Saved: /ECG-Analyzer/" + nameFolder);
+                    Log.d(TAG, "/ECG-Analyzer/" + nameFolder);
                     unlockFocus();
                 }
             };
@@ -919,14 +927,10 @@ public class Camera2BasicFragment extends Fragment
          * The JPEG image
          */
         private final Image mImage;
-        /**
-         * The file we save the image into.
-         */
-        private final File mFile;
 
-        public ImageSaver(Image image, File file) {
+
+        public ImageSaver(Image image) {
             mImage = image;
-            mFile = file;
         }
 
         @Override
@@ -936,8 +940,24 @@ public class Camera2BasicFragment extends Fragment
             buffer.get(bytes);
             FileOutputStream output = null;
             try {
-                output = new FileOutputStream(mFile);
-                output.write(bytes);
+
+                SimpleDateFormat sdf = new SimpleDateFormat("dd-MM-yyyy_HH-mm-ss", Locale.GERMAN);
+                String nameFolder = sdf.format(new Date());
+
+                File folder = new File(Environment.getExternalStorageDirectory()	+ "/ECG-Analyzer/" + nameFolder);
+                if(!folder.isDirectory()) {
+                    if (folder.mkdir()) {
+                        String path = Environment.getExternalStorageDirectory().getPath() +
+                                "/ECG-Analyzer/" + nameFolder;
+
+                        String name = "ECG.jpg";
+                        File mFile = new File(path, name);
+                        output = new FileOutputStream(mFile);
+                        output.write(bytes);
+                        System.out.println("se hizo la fotele");
+                    }
+                }
+
             } catch (IOException e) {
                 e.printStackTrace();
             } finally {
@@ -996,6 +1016,51 @@ public class Camera2BasicFragment extends Fragment
                     })
                     .create();
         }
+
+    }
+
+    @Override
+    public void onSensorChanged(SensorEvent event) {
+        switch (event.sensor.getType()){
+            case Sensor.TYPE_MAGNETIC_FIELD:
+                mags = event.values.clone();
+                break;
+            case Sensor.TYPE_ACCELEROMETER:
+                accels = event.values.clone();
+                break;
+        }
+        //showToast("haces algo!");
+        if (mags != null && accels != null) {
+            Rot = new float[9];
+            I= new float[9];
+            SensorManager.getRotationMatrix(Rot, I, accels, mags);
+            // Correct if screen is in Landscape
+
+            float[] outR = new float[9];
+            SensorManager.remapCoordinateSystem(Rot, SensorManager.AXIS_X, SensorManager.AXIS_Z, outR);
+            SensorManager.getOrientation(outR, values);
+
+            pitch = values[1] * 57.2957795f;
+            mags = null; //retrigger the loop when things are repopulated
+            accels = null; ////retrigger the loop when things are repopulated
+
+            RelativeLayout le = (RelativeLayout) getView().findViewById(R.id.rlcamera);
+            if (pitch >= 80.0F && pitch < 91.0F && isRed) {
+                le.setBackgroundResource(R.drawable.take_foto_border_green);
+                isRed = false;
+                inRange = true;
+            }else if (pitch < 80.0F || pitch >= 91.0F){
+                if(!isRed){
+                    le.setBackgroundResource(R.drawable.take_foto_border_red);
+                    isRed = true;
+                    inRange = false;
+                }
+            }
+        }
+    }
+
+    @Override
+    public void onAccuracyChanged(Sensor sensor, int accuracy) {
 
     }
 
