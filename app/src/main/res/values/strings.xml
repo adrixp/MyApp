@@ -62,5 +62,11 @@
     <string name="request_permission">This application needs camera permission.</string>
     <string name="camera_error">This device doesn\'t support Camera2 API.</string>
 
+    <string-array name="grid_array">
+        <item>20x20 px (5mm)</item>
+        <item>4x4 px (1mm)</item>
+        <item>40x40 px (10mm)</item>
+    </string-array>
+    <string name="texSpinner">Grid Square Size:</string>
 
 </resources>

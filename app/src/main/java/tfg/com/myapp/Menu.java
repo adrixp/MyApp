@@ -48,8 +48,8 @@ public class Menu extends Activity{
 	}
 	
 	public void log(View view) {
-		Intent i = new Intent(this, GridActivityCamOpBeta.class);
-		startActivity(i);
+		//Intent i = new Intent(this, GridActivityCamOpBeta.class);
+		//startActivity(i);
 	}
 
 	public void gridActivity(View view) {

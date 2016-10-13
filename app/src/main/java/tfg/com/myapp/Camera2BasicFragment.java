@@ -176,6 +176,9 @@ public class Camera2BasicFragment extends Fragment
      */
     private AutoFitTextureView mTextureView;
 
+    private DrawLines dl;
+    private boolean showGrid = true;
+
     /**
      * A {@link CameraCaptureSession } for camera preview.
      */
@@ -435,6 +438,8 @@ public class Camera2BasicFragment extends Fragment
     public void onViewCreated(final View view, Bundle savedInstanceState) {
         //view.findViewById(R.id.picture).setOnClickListener(this);
         view.findViewById(R.id.picture).setOnClickListener(this);
+        view.findViewById(R.id.showHideGrid).setOnClickListener(this);
+        dl = (DrawLines) view.findViewById(R.id.drawViewLines);
         mTextureView = (AutoFitTextureView) view.findViewById(R.id.texture);
     }
 
@@ -448,6 +453,15 @@ public class Camera2BasicFragment extends Fragment
                     showToast(getString(R.string.MustHoriz));
                 }
                 break;
+            }
+            case R.id.showHideGrid: {
+                if(showGrid) {
+                    dl.setVisibility(View.INVISIBLE);
+                    showGrid = false;
+                }else{
+                    dl.setVisibility(View.VISIBLE);
+                    showGrid = true;
+                }
             }
         }
     }

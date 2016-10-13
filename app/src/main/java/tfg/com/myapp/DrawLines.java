@@ -11,7 +11,8 @@ import android.view.View;
 public class DrawLines extends View {
     public Paint paint = new Paint();
     private static final String TAG = "TFG:DrawLines:Activity";
-    private double OnePxTomm = 0.264583333;
+    //5 mm son 18.897638 px
+    // 4px son 1 mm ||| 20px son 5mm ||| 40px son 10mm
 
     public int height = 1080;
     public int width = 1440;

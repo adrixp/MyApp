@@ -61,5 +61,12 @@
 	<string name="CincuentaS">50 mm/s</string>
 	<string name="milisV">  mm/mV</string>
 	<string name="ten">  10</string>
-	
+
+	<string-array name="grid_array">
+		<item>20x20 px (5mm)</item>
+		<item>4x4 px (1mm)</item>
+		<item>40x40 px (10mm)</item>
+	</string-array>
+	<string name="texSpinner">Tamaño rejilla:</string>
+
 </resources>
