@@ -189,7 +189,7 @@ public class File_Manager extends Activity{
 
 		String [] s = li.get(pos).getNombre().split("\\.");
 						
-		if (s[s.length-1].equals("jpg")) {
+		if (s[s.length-1].equals("jpg")|| s[s.length-1].equals("png")) {
 			nombre = Environment.getExternalStorageDirectory()+ parsePath(path)+nombre; //ruta del archivo
 
 			menu.setHeaderTitle(getString(R.string.OptionsMenuFMC) + " " + li.get(pos).getNombre());

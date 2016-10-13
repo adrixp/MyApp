@@ -10,8 +10,12 @@ import android.content.Context;
 import android.content.DialogInterface;
 import android.content.pm.PackageManager;
 import android.content.res.Configuration;
+import android.graphics.Bitmap;
+import android.graphics.Canvas;
+import android.graphics.Color;
 import android.graphics.ImageFormat;
 import android.graphics.Matrix;
+import android.graphics.Paint;
 import android.graphics.Point;
 import android.graphics.RectF;
 import android.graphics.SurfaceTexture;
@@ -48,8 +52,10 @@ import android.view.ViewGroup;
 import android.widget.RelativeLayout;
 import android.widget.Toast;
 
+import java.io.BufferedReader;
 import java.io.File;
 import java.io.FileOutputStream;
+import java.io.FileReader;
 import java.io.IOException;
 import java.nio.ByteBuffer;
 import java.text.SimpleDateFormat;
@@ -947,12 +953,35 @@ public class Camera2BasicFragment extends Fragment
             mImage = image;
         }
 
+        public String readFile(){
+            String path = Environment.getExternalStorageDirectory().getPath() + "/ECG-Analyzer";
+            File file = new File(path, "sharedGridOptions.txt");
+            //Read text from file
+            String line;
+            String text = "";
+
+            try {
+                BufferedReader br = new BufferedReader(new FileReader(file));
+
+                while ((line = br.readLine()) != null) {
+                    text = text + line + "\n";
+                }
+                br.close();
+            }
+            catch (IOException e) {
+                //You'll need to add proper error handling here
+                text = "";
+            }
+            //System.out.println("ReadFileREquest: texto Leido: " + text);
+            return text;
+        }
+
         @Override
         public void run() {
             ByteBuffer buffer = mImage.getPlanes()[0].getBuffer();
             byte[] bytes = new byte[buffer.remaining()];
             buffer.get(bytes);
-            FileOutputStream output = null;
+            FileOutputStream output;
             try {
 
                 SimpleDateFormat sdf = new SimpleDateFormat("dd-MM-yyyy_HH-mm-ss", Locale.GERMAN);
@@ -963,26 +992,68 @@ public class Camera2BasicFragment extends Fragment
                     if (folder.mkdir()) {
                         String path = Environment.getExternalStorageDirectory().getPath() +
                                 "/ECG-Analyzer/" + nameFolder;
-
-                        String name = "ECG.jpg";
-                        File mFile = new File(path, name);
+                        //Guardamos la img
+                        File mFile = new File(path, "ECG.jpg");
                         output = new FileOutputStream(mFile);
                         output.write(bytes);
-                        System.out.println("se hizo la fotele");
+                        mImage.close();
+                        output.close();
+
+                        //Escribimos settings en el txt
+                        String dataSet = readFile();
+                        File settings = new File(path, "settings.txt");
+                        FileOutputStream fos2 = new FileOutputStream(settings);
+
+                        fos2.write(dataSet.getBytes());
+                        fos2.close();
+
+                        //Guardamos la rejilla
+                        String settingsParts [] = dataSet.split("\n");
+                        //Obtenemos el ancho y el alto de la rejilla
+                        String gridSettWyH [] = settingsParts[settingsParts.length-1].split(" ")[2].split("x");
+                        //Obtenemos el alto y ancho de toda la imagen
+                        String WyH [] = settingsParts[settingsParts.length-2].split(" ")[1].split("x");
+                        //System.out.println("xxx:" + gridSettWyH[0]+"x"+ gridSettWyH[1]);
+
+
+                        //write Grid (rejilla) in png
+                        Paint paint = new Paint();
+                        paint.setColor(Color.RED);
+
+                        int height = Integer.parseInt(WyH[1]);
+                        int width = Integer.parseInt(WyH[0]);
+                        int numPxH = Integer.parseInt(gridSettWyH[1]);
+                        int numPxW = Integer.parseInt(gridSettWyH[0]);
+
+                        Bitmap bmpBase = Bitmap.createBitmap(width+1, height+1, Bitmap.Config.ARGB_8888);
+                        Canvas canvasToSave = new Canvas(bmpBase);
+
+                        //Lineas Horiz
+                        //                1ºigual      3ºigual
+                        //ancho:1440 px  alto: 1080 px
+                        for (int i = 0; i <= height/numPxH; i++){
+                            canvasToSave.drawLine(0, i*numPxH, width, i*numPxH, paint);
+                        }
+                        //Lineas Verticales
+                        //             2ºigual  4ºigual
+                        //ancho:1440 px  alto: 1080 px
+
+                        for (int i = 0; i <= width/numPxW; i++){
+                            canvasToSave.drawLine(i*numPxW, 0, i*numPxW, height, paint);
+                        }
+
+                        File photoGrid = new File(path, "Grid.png");
+
+                        FileOutputStream fos3 = new FileOutputStream(photoGrid);
+                        bmpBase.compress(Bitmap.CompressFormat.PNG, 100, fos3);
+
+                        fos3.flush();
+                        fos3.close();
                     }
                 }
 
-            } catch (IOException e) {
+            } catch (Exception e) {
                 e.printStackTrace();
-            } finally {
-                mImage.close();
-                if (null != output) {
-                    try {
-                        output.close();
-                    } catch (IOException e) {
-                        e.printStackTrace();
-                    }
-                }
             }
         }
 
