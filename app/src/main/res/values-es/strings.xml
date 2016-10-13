@@ -54,5 +54,12 @@
 	<string name="picture">Foto</string>
 	<string name="request_permission">Esta aplicación necesita permisos de la cámara.</string>
 	<string name="camera_error">Este dispositivo no soporta Camera2 API.</string>
+
+	<string name="Log">Log</string>
+	<string name="TenS">10 s</string>
+	<string name="veinticincoS">25 mm/s</string>
+	<string name="CincuentaS">50 mm/s</string>
+	<string name="milisV">  mm/mV</string>
+	<string name="ten">  10</string>
 	
 </resources>

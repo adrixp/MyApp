@@ -12,6 +12,12 @@
         android:layout_height="wrap_content"
         android:layout_alignParentStart="true"
         android:layout_alignParentTop="true" />
+
+    <tfg.com.myapp.DrawLines
+        android:id="@+id/drawViewLines"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent" />
+
     <FrameLayout
         android:id="@+id/control"
         android:layout_width="match_parent"

@@ -41,7 +41,7 @@
     
     <string-array name="tiposFlash">
         <item>No</item>
-        <item>Yes</item>
+        <item>Si</item>
     </string-array>
     <string-array name="tiposFlashValues">
         <item>0</item>
