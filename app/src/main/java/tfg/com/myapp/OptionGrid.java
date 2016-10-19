@@ -2,11 +2,20 @@ package tfg.com.myapp;
 
 
 import android.app.Activity;
+import android.content.Context;
 import android.content.Intent;
+import android.content.SharedPreferences;
+import android.graphics.ImageFormat;
+import android.hardware.camera2.CameraAccessException;
+import android.hardware.camera2.CameraCharacteristics;
+import android.hardware.camera2.CameraManager;
+import android.hardware.camera2.params.StreamConfigurationMap;
 import android.os.Bundle;
 import android.os.Environment;
+import android.preference.PreferenceManager;
 import android.text.InputType;
 import android.util.Log;
+import android.util.Size;
 import android.view.View;
 import android.widget.ArrayAdapter;
 import android.widget.EditText;
@@ -16,6 +25,7 @@ import android.widget.Toast;
 
 import java.io.File;
 import java.io.FileOutputStream;
+import java.util.Arrays;
 
 public class OptionGrid extends Activity {
 
@@ -60,13 +70,42 @@ public class OptionGrid extends Activity {
             }else{
                 mmSeg = "50";
             }
+            int width = 1440;
+            int height = 1080;
+            //Get Resolution Selected camera
+            CameraManager manager = (CameraManager) this.getSystemService(Context.CAMERA_SERVICE);
+            try {
+
+                for (String cameraId : manager.getCameraIdList()) {
+                    CameraCharacteristics characteristics
+                            = manager.getCameraCharacteristics(cameraId);
+                    StreamConfigurationMap map = characteristics.get(
+                            CameraCharacteristics.SCALER_STREAM_CONFIGURATION_MAP);
+
+                    SharedPreferences pref = PreferenceManager
+                            .getDefaultSharedPreferences(this);
+
+                    int numBestPrev = Integer.parseInt(pref.getString("typeCal", "0"));
+                    Size choosenSize = Arrays.asList(map.getOutputSizes(ImageFormat.JPEG)).get(numBestPrev);
+
+                    width = choosenSize.getWidth();
+                    height = choosenSize.getHeight();
+                }
+            }catch (CameraAccessException e) {
+                e.printStackTrace();
+            } catch (NullPointerException e) {
+                Toast.makeText(this, getString(R.string.camera_error), Toast.LENGTH_LONG)
+                        .show();
+            }catch (Exception e){
+                e.printStackTrace();
+            }
 
             String path = Environment.getExternalStorageDirectory().getPath() + "/ECG-Analyzer/";
 
 
             String dataSet = "Datos para ECG.jpg:\n" + "Velocidad papel: " + mmSeg + "mm/s \n"
                     + "Voltaje: " + textFromEd + "mm/mV \n"
-                    + "Tamaño: " + "1440" + "x" + "1080" + "\n"
+                    + "Tamaño: " + width + "x" + height + "\n"
                     +"Tamaño rejilla: " + spinnerText;
 
             try{

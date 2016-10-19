@@ -2,17 +2,24 @@ package tfg.com.myapp;
 
 import java.util.ArrayList;
 import java.util.List;
-import android.hardware.Camera;
+
+
+import android.content.Context;
+import android.graphics.ImageFormat;
+import android.hardware.camera2.CameraAccessException;
+import android.hardware.camera2.CameraCharacteristics;
+import android.hardware.camera2.CameraManager;
+import android.hardware.camera2.params.StreamConfigurationMap;
 import android.os.Bundle;
 import android.preference.ListPreference;
 import android.preference.PreferenceActivity;
 import android.preference.PreferenceFragment;
+import android.util.Size;
 import android.widget.Toast;
 
 public class Settings extends PreferenceActivity {
 	
-	private Camera camera = null;
-	Camera.Parameters parameters;
+
 	static List<String> listItemsEntries;
 	static List<String> listItemsEntriesVal;
 	static int counter =0;
@@ -21,19 +28,37 @@ public class Settings extends PreferenceActivity {
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 
-		camera = Camera.open();
-		parameters = camera.getParameters();
-		
-		listItemsEntries = new ArrayList<String>();
-		listItemsEntriesVal = new ArrayList<String>();
-		counter =0;
+        CameraManager manager = (CameraManager) this.getSystemService(Context.CAMERA_SERVICE);
+        try {
 
-        for (Camera.Size size : parameters.getSupportedPreviewSizes()) {
-        	listItemsEntries.add(size.width+"x"+size.height);
-			listItemsEntriesVal.add(Integer.toString(counter));
-			counter = counter +1;
-		}
-		
+            for (String cameraId : manager.getCameraIdList()) {
+                CameraCharacteristics characteristics
+                        = manager.getCameraCharacteristics(cameraId);
+                StreamConfigurationMap map = characteristics.get(
+                        CameraCharacteristics.SCALER_STREAM_CONFIGURATION_MAP);
+
+                //Opciones disponibles para foto
+                Size[] choices = map.getOutputSizes(ImageFormat.JPEG);
+
+                listItemsEntries = new ArrayList<String>();
+                listItemsEntriesVal = new ArrayList<String>();
+                counter = 0;
+
+                for (Size s: choices) {
+                    listItemsEntries.add(s.getWidth() + "x" + s.getHeight());
+                    listItemsEntriesVal.add(Integer.toString(counter));
+                    counter = counter + 1;
+                }
+                break;
+            }
+        }catch (CameraAccessException e) {
+            e.printStackTrace();
+        } catch (NullPointerException e) {
+            Toast.makeText(this, getString(R.string.camera_error), Toast.LENGTH_LONG)
+                    .show();
+        }catch (Exception e){
+            e.printStackTrace();
+        }
 		
 		getFragmentManager().beginTransaction()
 				.replace(android.R.id.content, new PrefsFragment()).commit();
@@ -42,8 +67,6 @@ public class Settings extends PreferenceActivity {
 	@Override
 	public void onPause() {
 		counter =0;
-		camera.release();
-		camera = null;
 		Toast.makeText(this, getString(R.string.SavedPref), Toast.LENGTH_LONG)
 				.show();
 		super.onPause();
@@ -68,8 +91,9 @@ public class Settings extends PreferenceActivity {
             final CharSequence[] entries = listItemsEntries.toArray(new CharSequence[listItemsEntries.size()]);
             final CharSequence[] entryValues = listItemsEntriesVal.toArray(new CharSequence[listItemsEntriesVal.size()]);
             lp.setEntries(entries);
-            lp.setDefaultValue(entries[0]);
             lp.setEntryValues(entryValues);
+            lp.setDefaultValue(entries[0]);
+
 		}
 	}
 

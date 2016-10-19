@@ -8,6 +8,7 @@ import android.app.DialogFragment;
 import android.app.Fragment;
 import android.content.Context;
 import android.content.DialogInterface;
+import android.content.SharedPreferences;
 import android.content.pm.PackageManager;
 import android.content.res.Configuration;
 import android.graphics.Bitmap;
@@ -39,6 +40,7 @@ import android.os.Bundle;
 import android.os.Environment;
 import android.os.Handler;
 import android.os.HandlerThread;
+import android.preference.PreferenceManager;
 import android.support.annotation.NonNull;
 import android.support.v4.content.ContextCompat;
 import android.util.Log;
@@ -557,7 +559,14 @@ public class Camera2BasicFragment extends Fragment
                 Size largest = Collections.max(
                         Arrays.asList(map.getOutputSizes(ImageFormat.JPEG)),
                         new CompareSizesByArea());
-                mImageReader = ImageReader.newInstance(largest.getWidth(), largest.getHeight(),
+
+                SharedPreferences pref = PreferenceManager
+                        .getDefaultSharedPreferences(activity);
+
+                int numBestPrev = Integer.parseInt(pref.getString("typeCal", "0"));
+                Size choosenSize = Arrays.asList(map.getOutputSizes(ImageFormat.JPEG)).get(numBestPrev);
+
+                mImageReader = ImageReader.newInstance(choosenSize.getWidth(), choosenSize.getHeight(),
                         ImageFormat.JPEG, /*maxImages*/2);
                 mImageReader.setOnImageAvailableListener(
                         mOnImageAvailableListener, mBackgroundHandler);
@@ -627,8 +636,13 @@ public class Camera2BasicFragment extends Fragment
 
                 // Check if the flash is supported.
                 Boolean available = characteristics.get(CameraCharacteristics.FLASH_INFO_AVAILABLE);
-                mFlashSupported = available == null ? false : available;
+                int numflash = Integer.parseInt(pref.getString("setFlash", "0"));
+                Boolean choosenFlash = true;
+                if(numflash != 1){
+                    choosenFlash = false;
+                }
 
+                mFlashSupported = available != null && (choosenFlash ? available : false);
                 mCameraId = cameraId;
                 return;
             }
@@ -972,7 +986,6 @@ public class Camera2BasicFragment extends Fragment
                 //You'll need to add proper error handling here
                 text = "";
             }
-            //System.out.println("ReadFileREquest: texto Leido: " + text);
             return text;
         }
 
@@ -1013,8 +1026,6 @@ public class Camera2BasicFragment extends Fragment
                         String gridSettWyH [] = settingsParts[settingsParts.length-1].split(" ")[2].split("x");
                         //Obtenemos el alto y ancho de toda la imagen
                         String WyH [] = settingsParts[settingsParts.length-2].split(" ")[1].split("x");
-                        //System.out.println("xxx:" + gridSettWyH[0]+"x"+ gridSettWyH[1]);
-
 
                         //write Grid (rejilla) in png
                         Paint paint = new Paint();
@@ -1025,21 +1036,31 @@ public class Camera2BasicFragment extends Fragment
                         int numPxH = Integer.parseInt(gridSettWyH[1]);
                         int numPxW = Integer.parseInt(gridSettWyH[0]);
 
-                        Bitmap bmpBase = Bitmap.createBitmap(width+1, height+1, Bitmap.Config.ARGB_8888);
+                        Bitmap bmpBase = Bitmap.createBitmap(width, height, Bitmap.Config.ARGB_8888);
                         Canvas canvasToSave = new Canvas(bmpBase);
 
                         //Lineas Horiz
                         //                1ºigual      3ºigual
                         //ancho:1440 px  alto: 1080 px
                         for (int i = 0; i <= height/numPxH; i++){
-                            canvasToSave.drawLine(0, i*numPxH, width, i*numPxH, paint);
+                            if(i == height/numPxH){
+                                canvasToSave.drawLine(0, i*numPxH-1, width, i*numPxH-1, paint);
+                            }else{
+                                canvasToSave.drawLine(0, i*numPxH, width, i*numPxH, paint);
+                            }
+
                         }
                         //Lineas Verticales
                         //             2ºigual  4ºigual
                         //ancho:1440 px  alto: 1080 px
 
                         for (int i = 0; i <= width/numPxW; i++){
-                            canvasToSave.drawLine(i*numPxW, 0, i*numPxW, height, paint);
+                            if(i == width/numPxW){
+                                canvasToSave.drawLine(i*numPxW-1, 0, i*numPxW-1, height, paint);
+                            }else{
+                                canvasToSave.drawLine(i*numPxW, 0, i*numPxW, height, paint);
+                            }
+
                         }
 
                         File photoGrid = new File(path, "Grid.png");
