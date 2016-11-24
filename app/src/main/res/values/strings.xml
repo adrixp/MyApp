@@ -68,5 +68,7 @@
         <item>40x40 px (10mm)</item>
     </string-array>
     <string name="texSpinner">Grid Square Size:</string>
+    <string name="textcropbutton">Crop</string>
 
+    <string name="photoCropped">Photo has been cropped and saved</string>
 </resources>

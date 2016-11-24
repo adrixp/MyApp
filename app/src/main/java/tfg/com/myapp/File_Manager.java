@@ -89,6 +89,8 @@ public class File_Manager extends Activity{
 	public void onResume() {
 		super.onResume();
 		isTxt = false;
+		li.clear();
+		AdapFiles(listV, parsePath(path));
 	}
 
 	@Override

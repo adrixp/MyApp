@@ -23,8 +23,8 @@ public class Menu extends Activity{
 	}
 	
 	public void openCam(View view) {
-		Intent mainIntent = new Intent(this,TakePhoto.class);
-        startActivity(mainIntent);
+		//Intent mainIntent = new Intent(this,TakePhoto.class);
+        //startActivity(mainIntent);
 	}
 	
 	public void searchPhoto(View view) {

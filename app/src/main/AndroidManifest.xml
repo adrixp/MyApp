@@ -89,7 +89,7 @@
             android:configChanges="keyboardHidden|orientation"
             android:label="@string/app_name"
             android:screenOrientation="landscape"
-            android:theme="@style/Theme.NoTitle" >
+            android:theme="@android:style/Theme.Material.Light.NoActionBar.Fullscreen" >
         </activity>File_View
         <activity
             android:name=".File_View"

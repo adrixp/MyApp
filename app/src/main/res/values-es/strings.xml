@@ -69,4 +69,7 @@
 	</string-array>
 	<string name="texSpinner">Tamaño rejilla:</string>
 
+	<string name="textcropbutton">Crop</string>
+	<string name="photoCropped">La foto ha sido recortada y guardada</string>
+
 </resources>

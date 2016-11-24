@@ -468,6 +468,7 @@ public class Camera2BasicFragment extends Fragment
                     showGrid = false;
                 }else{
                     dl.setVisibility(View.VISIBLE);
+
                     showGrid = true;
                 }
             }
