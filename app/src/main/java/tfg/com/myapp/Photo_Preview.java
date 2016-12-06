@@ -37,13 +37,15 @@ public class Photo_Preview extends Activity {
 		path = extras.getString("photoPath");
 		name = extras.getString("photoName");
 
+        System.out.println("path: "+ path + "   name: " + name);
+
         if (name.equals("ECG.jpg")){
             setContentView(R.layout.layout_photo_preview);
 
             EditPhotoView imageView = (EditPhotoView) findViewById(R.id.editable_image);
             EditableImage image = new EditableImage(path);
             String [] parts = readFile().split("\n")[3].split(" ")[1].split("x");
-            System.out.println(parts[0] + " " + parts[1]);
+
             xFin = Integer.parseInt(parts[0]);
             yFin = Integer.parseInt(parts[1])/3;
 
@@ -112,15 +114,15 @@ public class Photo_Preview extends Activity {
             bt.setBackgroundColor(Color.parseColor("#BDBDBD"));
             //Recortamos la foto
 
-            BitmapWorkerTask task = new BitmapWorkerTask(path, pathReal, "Derivacion_" + numeroDist + ".png", xIni, yIni, xFin, yFin, bt, false);
+            BitmapWorkerTask task = new BitmapWorkerTask(path, pathReal, "Derivacion_" + numeroDist + ".png", xIni, yIni, xFin, yFin, bt, false, null, "", null);
             task.execute(1);
 
             //Recortamos la rejilla
             String gridPath = path.substring(0, path.indexOf(name)) + "Grid.png";
-            BitmapWorkerTask taskgrid = new BitmapWorkerTask(gridPath, pathReal, "Grid_" + numeroDist + ".png", xIni, yIni, xFin, yFin, bt, true);
+            BitmapWorkerTask taskgrid = new BitmapWorkerTask(gridPath, pathReal, "Grid_" + numeroDist + ".png", xIni, yIni, xFin, yFin, bt, true, getApplicationContext(), "Derivacion_" + numeroDist + ".png", this);
             taskgrid.execute(1);
 
-            Toast.makeText(this, getString(R.string.photoCropped), Toast.LENGTH_LONG).show();
+            Toast.makeText(this, getString(R.string.working), Toast.LENGTH_LONG).show();
         }
 
     }

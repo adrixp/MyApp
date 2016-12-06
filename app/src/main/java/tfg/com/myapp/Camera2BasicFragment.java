@@ -8,6 +8,7 @@ import android.app.DialogFragment;
 import android.app.Fragment;
 import android.content.Context;
 import android.content.DialogInterface;
+import android.content.Intent;
 import android.content.SharedPreferences;
 import android.content.pm.PackageManager;
 import android.content.res.Configuration;
@@ -456,6 +457,7 @@ public class Camera2BasicFragment extends Fragment
         switch (view.getId()) {
             case R.id.picture: {
                 if(inRange) {
+                    showToast(getString(R.string.working));
                     takePicture();
                 }else{
                     showToast(getString(R.string.MustHoriz));
@@ -956,7 +958,7 @@ public class Camera2BasicFragment extends Fragment
     /**
      * Saves a JPEG {@link Image} into the specified {@link File}.
      */
-    private static class ImageSaver implements Runnable {
+    private class ImageSaver implements Runnable {
 
         /**
          * The JPEG image
@@ -988,6 +990,22 @@ public class Camera2BasicFragment extends Fragment
                 text = "";
             }
             return text;
+        }
+
+        public void lanzarOptions(String msg, final String path) {
+
+            new AlertDialog.Builder(getActivity()).setTitle(getString(R.string.proccesOrnotTitleDer))
+                    .setMessage(msg)
+                    .setPositiveButton(getString(R.string.proccesOrnotYes), new DialogInterface.OnClickListener() {
+                        public void onClick(DialogInterface dialog, int whichButton) {
+                            Intent i = new Intent(getActivity(), Photo_Preview.class);
+                            i.putExtra("photoPath", path + "/ECG.jpg");
+                            i.putExtra("photoName", "ECG.jpg");
+                            startActivity(i);
+                        }
+                    })
+                    .setNegativeButton(getString(R.string.proccesOrnotLater), null)
+                    .show();
         }
 
         @Override
@@ -1071,6 +1089,10 @@ public class Camera2BasicFragment extends Fragment
 
                         fos3.flush();
                         fos3.close();
+
+                        lanzarOptions(getString(R.string.proccesOrnot) , path);
+
+
                     }
                 }
 

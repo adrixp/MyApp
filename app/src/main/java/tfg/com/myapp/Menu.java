@@ -23,8 +23,8 @@ public class Menu extends Activity{
 	}
 	
 	public void openCam(View view) {
-		//Intent mainIntent = new Intent(this,TakePhoto.class);
-        //startActivity(mainIntent);
+		Intent i = new Intent(this, OptionGrid.class);
+		startActivity(i);
 	}
 	
 	public void searchPhoto(View view) {
@@ -47,13 +47,5 @@ public class Menu extends Activity{
 		startActivity(i);
 	}
 	
-	public void log(View view) {
-		//Intent i = new Intent(this, GridActivityCamOpBeta.class);
-		//startActivity(i);
-	}
 
-	public void gridActivity(View view) {
-		Intent i = new Intent(this, OptionGrid.class);
-		startActivity(i);
-	}
 }

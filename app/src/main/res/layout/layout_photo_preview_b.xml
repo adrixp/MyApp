@@ -3,6 +3,7 @@
     xmlns:android="http://schemas.android.com/apk/res/android"
     android:id="@+id/main_holder"
     android:orientation="vertical"
+    android:background="@color/colorblack"
     android:layout_width="match_parent"
     android:layout_height="match_parent">
     <ImageView

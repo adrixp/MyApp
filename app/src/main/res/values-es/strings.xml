@@ -71,5 +71,12 @@
 
 	<string name="textcropbutton">Crop</string>
 	<string name="photoCropped">La foto ha sido recortada y guardada</string>
+	<string name="working">Procesando...</string>
+	<string name="proccesOrnot">Quiere procesar la imagen?</string>
+	<string name="proccesOrnotYes">Si!</string>
+	<string name="proccesOrnotLater">Luego</string>
+	<string name="proccesOrnotTitle">Imagen capturada!</string>
 
+	<string name="proccesOrnotTitleDer">Imagen recortada!</string>
+	<string name="proccesOrnotDer">Querrías verla?</string>
 </resources>
