@@ -1,9 +1,11 @@
 package tfg.com.myapp;
 
 import android.app.Activity;
+import android.content.SharedPreferences;
 import android.graphics.Color;
 import android.net.Uri;
 import android.os.Bundle;
+import android.preference.PreferenceManager;
 import android.view.View;
 import android.widget.Button;
 import android.widget.ImageView;
@@ -29,6 +31,9 @@ public class Photo_Preview extends Activity {
     private int xFin = 640;
     private int yFin = 880;
 
+    private int isJpeg = 0;
+    private int numcomp = 0;
+
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
@@ -39,7 +44,16 @@ public class Photo_Preview extends Activity {
 
         System.out.println("path: "+ path + "   name: " + name);
 
-        if (name.equals("ECG.jpg")){
+        SharedPreferences pref = PreferenceManager
+                .getDefaultSharedPreferences(this);
+
+        numcomp = Integer.parseInt(pref.getString("typeComp", "0")) * 10 + 10;
+        isJpeg = Integer.parseInt(pref.getString("typeFormat", "0"));
+
+        System.out.println("numcomp: " + numcomp + " isJpeg: " + isJpeg);
+
+        if (name.equals("ECG.jpg") || name.equals("ECG.png")){
+
             setContentView(R.layout.layout_photo_preview);
 
             EditPhotoView imageView = (EditPhotoView) findViewById(R.id.editable_image);
@@ -91,6 +105,15 @@ public class Photo_Preview extends Activity {
         String pathReal = path.substring(0, path.indexOf(name)) + "Derivaciones";
         File folder = new File(pathReal);
 
+        String ext = "";
+        if (name.equals("ECG.jpg")){
+            ext = ".jpg";
+            isJpeg = 1;
+        }else{
+            ext = ".png";
+            isJpeg = 0;
+        }
+
         Boolean notfailed = true;
         if(!folder.isDirectory()) {
             if (folder.mkdir()) {
@@ -114,12 +137,12 @@ public class Photo_Preview extends Activity {
             bt.setBackgroundColor(Color.parseColor("#BDBDBD"));
             //Recortamos la foto
 
-            BitmapWorkerTask task = new BitmapWorkerTask(path, pathReal, "Derivacion_" + numeroDist + ".png", xIni, yIni, xFin, yFin, bt, false, null, "", null);
+            BitmapWorkerTask task = new BitmapWorkerTask(path, pathReal, "Derivacion_" + numeroDist + ext, xIni, yIni, xFin, yFin, bt, false, null, "", null, numcomp, isJpeg);
             task.execute(1);
 
             //Recortamos la rejilla
-            String gridPath = path.substring(0, path.indexOf(name)) + "Grid.png";
-            BitmapWorkerTask taskgrid = new BitmapWorkerTask(gridPath, pathReal, "Grid_" + numeroDist + ".png", xIni, yIni, xFin, yFin, bt, true, getApplicationContext(), "Derivacion_" + numeroDist + ".png", this);
+            String gridPath = path.substring(0, path.indexOf(name)) + "Grid" + ext;
+            BitmapWorkerTask taskgrid = new BitmapWorkerTask(gridPath, pathReal, "Grid_" + numeroDist + ext, xIni, yIni, xFin, yFin, bt, true, getApplicationContext(), "Derivacion_" + numeroDist + ext, this, numcomp, isJpeg);
             taskgrid.execute(1);
 
             Toast.makeText(this, getString(R.string.working), Toast.LENGTH_LONG).show();

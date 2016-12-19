@@ -13,6 +13,7 @@ import android.content.SharedPreferences;
 import android.content.pm.PackageManager;
 import android.content.res.Configuration;
 import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
 import android.graphics.Canvas;
 import android.graphics.Color;
 import android.graphics.ImageFormat;
@@ -992,15 +993,15 @@ public class Camera2BasicFragment extends Fragment
             return text;
         }
 
-        public void lanzarOptions(String msg, final String path) {
+        public void lanzarOptions(String msg, final String path, final String name) {
 
             new AlertDialog.Builder(getActivity()).setTitle(getString(R.string.proccesOrnotTitleDer))
                     .setMessage(msg)
                     .setPositiveButton(getString(R.string.proccesOrnotYes), new DialogInterface.OnClickListener() {
                         public void onClick(DialogInterface dialog, int whichButton) {
                             Intent i = new Intent(getActivity(), Photo_Preview.class);
-                            i.putExtra("photoPath", path + "/ECG.jpg");
-                            i.putExtra("photoName", "ECG.jpg");
+                            i.putExtra("photoPath", path + "/" + name);
+                            i.putExtra("photoName", name);
                             startActivity(i);
                         }
                     })
@@ -1014,6 +1015,13 @@ public class Camera2BasicFragment extends Fragment
             byte[] bytes = new byte[buffer.remaining()];
             buffer.get(bytes);
             FileOutputStream output;
+
+            SharedPreferences pref = PreferenceManager
+                    .getDefaultSharedPreferences(getActivity());
+
+            int numcomp = Integer.parseInt(pref.getString("typeComp", "0")) * 10 + 10;
+            int isJpeg = Integer.parseInt(pref.getString("typeFormat", "0")); //0 es jpeg 1 es png
+
             try {
 
                 SimpleDateFormat sdf = new SimpleDateFormat("dd-MM-yyyy_HH-mm-ss", Locale.GERMAN);
@@ -1025,9 +1033,29 @@ public class Camera2BasicFragment extends Fragment
                         String path = Environment.getExternalStorageDirectory().getPath() +
                                 "/ECG-Analyzer/" + nameFolder;
                         //Guardamos la img
-                        File mFile = new File(path, "ECG.jpg");
+                        String namePhoto = "";
+                        String nameGrid = "";
+                        if (isJpeg == 1){
+                            namePhoto = "ECG.jpg";
+                            nameGrid = "Grid.jpg";
+                        }else{
+                            namePhoto = "ECG.png";
+                            nameGrid = "Grid.png";
+                        }
+
+
+                        File mFile = new File(path, namePhoto);
                         output = new FileOutputStream(mFile);
-                        output.write(bytes);
+
+                        if(isJpeg == 1){
+                            output.write(bytes);
+                        }else{
+                            Bitmap bitmap = BitmapFactory.decodeByteArray(bytes, 0, bytes.length);
+                            bitmap.compress(Bitmap.CompressFormat.PNG, numcomp, output);
+
+                            output.flush();
+                        }
+
                         mImage.close();
                         output.close();
 
@@ -1082,15 +1110,20 @@ public class Camera2BasicFragment extends Fragment
 
                         }
 
-                        File photoGrid = new File(path, "Grid.png");
+                        File photoGrid = new File(path, nameGrid);
 
                         FileOutputStream fos3 = new FileOutputStream(photoGrid);
-                        bmpBase.compress(Bitmap.CompressFormat.PNG, 100, fos3);
+                        if(isJpeg == 1){
+                            bmpBase.compress(Bitmap.CompressFormat.JPEG, numcomp, fos3);
+                        }else{
+                            bmpBase.compress(Bitmap.CompressFormat.PNG, numcomp, fos3);
+                        }
+
 
                         fos3.flush();
                         fos3.close();
 
-                        lanzarOptions(getString(R.string.proccesOrnot) , path);
+                        lanzarOptions(getString(R.string.proccesOrnot) , path, namePhoto);
 
 
                     }

@@ -15,6 +15,7 @@
         <item>100</item>
     </string-array>
 	<string-array name="tiposCompressValues">
+        <item>0</item>
         <item>1</item>
         <item>2</item>
 		<item>3</item>
@@ -25,18 +26,15 @@
         <item>8</item>
         <item>9</item>
         <item>10</item>
-        <item>11</item>
     </string-array>
     
     <string-array name="tiposFormat">
         <item>png</item>
         <item>jpg</item>
-        <item>bmp</item>
     </string-array>
     <string-array name="tiposFormatValues">
         <item>0</item>
         <item>1</item>
-        <item>2</item>
     </string-array>
     
     <string-array name="tiposFlash">
