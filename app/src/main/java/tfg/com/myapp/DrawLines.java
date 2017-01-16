@@ -28,7 +28,7 @@ public class DrawLines extends View {
 
     public DrawLines(Context context) {
         super(context);
-        paint.setColor(Color.RED);
+        paint.setColor(Color.GREEN);
     }
 
     public DrawLines(Context context, AttributeSet attrs, int defStyle) {
@@ -37,7 +37,7 @@ public class DrawLines extends View {
 
     public DrawLines(Context context, AttributeSet attrs) {
         super(context, attrs);
-        paint.setColor(Color.RED);
+        paint.setColor(Color.GREEN);
     }
 
     public String readFile(){
@@ -70,64 +70,58 @@ public class DrawLines extends View {
         Log.i(TAG, "canvas Height: " + canvas.getHeight());
 
         String dataSet = readFile();
+        String direction = "";
 
         if(dataSet != null && dataSet != ""){
             String settingsParts [] = dataSet.split("\n");
-            String gridSettWyH [] = settingsParts[settingsParts.length-1].split(" ")[2].split("x");
+
+            direction = settingsParts[settingsParts.length-4].split(" ")[2];
+            String widthLine = settingsParts[settingsParts.length-3].split(" ")[2].split("m")[0];
+
             String WyH [] = settingsParts[settingsParts.length-2].split(" ")[1].split("x");
+            paint.setStrokeWidth(Float.parseFloat(widthLine));
 
             height = Integer.parseInt(WyH[1]);
             width = Integer.parseInt(WyH[0]);
+
+            /*
+
+             String gridSettWyH [] = settingsParts[settingsParts.length-1].split(" ")[2].split("x");
             numPxH = Integer.parseInt(gridSettWyH[1]);
             numPxW = Integer.parseInt(gridSettWyH[0]);
 
-            Log.i(TAG, "Entra y: " + width + "x" + height + "rej: " + numPxW + "x" + numPxH);
+            Log.i(TAG, "Entra y: " + width + "x" + height + "rej: " + numPxW + "x" + numPxH);*/
         }
 
-        //Lineas Horiz
-        //                1ºigual      3ºigual
-        //ancho:1440 px  alto: 1080 px
-
-        for (int i = 0; i <= height/numPxH; i++){
-            canvas.drawLine(0, i*numPxH, width, i*numPxH, paint);
-        }
-        //Lineas Verticales
-        //             2ºigual  4ºigual
-        //ancho:1440 px  alto: 1080 px
-
-        for (int i = 0; i <= width/numPxW; i++){
-            canvas.drawLine(i*numPxW, 0, i*numPxW, height, paint);
+        if(direction.equals("Vertical")){
+            for (int i = canvas.getWidth()/10; i <= canvas.getWidth(); i = i + canvas.getWidth()/10){
+                canvas.drawLine(i, 0, i, canvas.getHeight(), paint);
+                Log.i(TAG, "xxxxv: " + i);
+            }
+        }else{
+            for (int i = canvas.getHeight()/5; i <= canvas.getHeight(); i = i + canvas.getHeight()/5){
+                canvas.drawLine(0, i, canvas.getWidth(), i, paint);
+                Log.i(TAG, "xxxxh: " + i);
+            }
         }
 
-        //Lines Horiz
-        /*canvas.drawLine(92, 42.428f, 884, 42.428f, paint);
-        canvas.drawLine(92, 84.857f, 884, 84.857f, paint);
-        canvas.drawLine(92, 127.285f, 884, 127.285f, paint);
-        canvas.drawLine(92, 169.714f, 884, 169.714f, paint);
-        canvas.drawLine(92, 212.142f, 884, 212.142f, paint);
-        canvas.drawLine(92, 254.571f, 884, 254.571f, paint);
-        canvas.drawLine(92, 297, 884, 297, paint);
-        canvas.drawLine(92, 339.428f, 884, 339.428f, paint);
-        canvas.drawLine(92, 381.857f, 884, 381.857f, paint);
-        canvas.drawLine(92, 424.285f, 884, 424.285f, paint);
-        canvas.drawLine(92, 466.714f, 884, 466.714f, paint);
-        canvas.drawLine(92, 509.142f, 884, 509.142f, paint);
-        canvas.drawLine(92, 551.571f, 884, 551.571f, paint);*/
+
+        /*
+         //Lineas Horiz
+            //                1ºigual      3ºigual
+            //ancho:1440 px  alto: 1080 px
+            for (int i = 0; i <= width/numPxW; i++){
+                canvas.drawLine(i*numPxW, 0, i*numPxW, height, paint);
+            }
 
 
-        //Lines Vert
+          //Lineas Verticales
+            //             2ºigual  4ºigual
+            //ancho:1440 px  alto: 1080 px
+            for (int i = 0; i <= height/numPxH; i++){
+                canvas.drawLine(0, i*numPxH, width, i*numPxH, paint);
+            }
 
-        /*canvas.drawLine(92, 0, 92, 2000, paint);
-        canvas.drawLine(171.2f, 0, 171.2f, 2000, paint);
-        canvas.drawLine(250.4f, 0, 250.4f, 2000, paint);
-        canvas.drawLine(329.6f, 0, 329.6f, 2000, paint);
-        canvas.drawLine(408.8f, 0, 408.8f, 2000, paint);
-        canvas.drawLine(488, 0, 488, 2000, paint);
-        canvas.drawLine(567.2f, 0, 567.2f, 2000, paint);
-        canvas.drawLine(646.4f, 0, 646.4f, 2000, paint);
-        canvas.drawLine(725.6f, 0, 725.6f, 2000, paint);
-        canvas.drawLine(804.8f, 0, 804.8f, 2000, paint);
-        canvas.drawLine(884, 0, 884, 2000, paint);*/
+         */
     }
-
 }

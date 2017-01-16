@@ -58,10 +58,11 @@ public class Photo_Preview extends Activity {
 
             EditPhotoView imageView = (EditPhotoView) findViewById(R.id.editable_image);
             EditableImage image = new EditableImage(path);
-            String [] parts = readFile().split("\n")[3].split(" ")[1].split("x");
+            String [] parts = readFile().split("\n");
+            String [] partsEnd = parts[parts.length -2].split(" ")[1].split("x");
 
-            xFin = Integer.parseInt(parts[0]);
-            yFin = Integer.parseInt(parts[1])/3;
+            xFin = Integer.parseInt(partsEnd[0]);
+            yFin = Integer.parseInt(partsEnd[1])/3;
 
             image.setBox(new ScalableBox(0,0, xFin, yFin));
             imageView.initView(this, image);

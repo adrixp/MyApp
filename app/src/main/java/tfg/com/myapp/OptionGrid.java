@@ -29,40 +29,70 @@ import java.util.Arrays;
 
 public class OptionGrid extends Activity {
 
-    private Spinner spinner;
+    private Spinner spinnerGrid;
+    private Spinner spinnerLines;
     private static final String TAG = "TFG:OptionGrid";
+    EditText mEditext;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.grid_options);
 
-        EditText mEditext = (EditText)findViewById(R.id.editText);
+        mEditext = (EditText)findViewById(R.id.editText);
         mEditext.setText("10");
 
-        spinner = (Spinner) findViewById(R.id.grid_spinner);
+        spinnerGrid = (Spinner) findViewById(R.id.grid_spinner);
         // Create an ArrayAdapter using the string array and a default spinner layout
         ArrayAdapter<CharSequence> adapter = ArrayAdapter.createFromResource(this,
                 R.array.grid_array, android.R.layout.simple_spinner_item);
         // Specify the layout to use when the list of choices appears
         adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
         // Apply the adapter to the spinner
-        spinner.setAdapter(adapter);
+        spinnerGrid.setAdapter(adapter);
+
+        //Spinner Lines
+
+        spinnerLines = (Spinner) findViewById(R.id.lineWidth_spinner);
+        ArrayAdapter<CharSequence> adapterLines = ArrayAdapter.createFromResource(this,
+                R.array.line_array, android.R.layout.simple_spinner_item);
+        // Specify the layout to use when the list of choices appears
+        adapterLines.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
+        // Apply the adapter to the spinner
+        spinnerLines.setAdapter(adapterLines);
+    }
+
+    @Override
+    public void onResume() {
+        super.onResume();
+        mEditext.setInputType(InputType.TYPE_CLASS_NUMBER);
+
     }
 
     public void continueGrid (View view) {
         float min = 5;
         float max = 20;
 
-        EditText mEditext = (EditText)findViewById(R.id.editText);
+        mEditext = (EditText)findViewById(R.id.editText);
         String textFromEd = mEditext.getText().toString();
 
         RadioButton rb = (RadioButton) findViewById(R.id.radioButton);
+        RadioButton rbDir = (RadioButton) findViewById(R.id.radioButtonHoriz);
 
         if(textFromEd.equals("")) {
             Toast.makeText(OptionGrid.this, getString(R.string.MustIntro), Toast.LENGTH_LONG).show();
         }else if(Float.parseFloat(textFromEd)>= min && Float.parseFloat(textFromEd)<= max){
-            String spinnerText = spinner.getSelectedItem().toString();
+            String spinnerGridText = spinnerGrid.getSelectedItem().toString();
+            String spinnerLineText = spinnerLines.getSelectedItem().toString();
+            if(spinnerGridText.equals("1mm")){
+                spinnerGridText = "4x4 px (1mm)";
+            }else if(spinnerGridText.equals("5mm")){
+                spinnerGridText = "20x20 px (5mm)";
+            }else{
+                spinnerGridText = "40x40 px (10mm)";
+            }
+
+
             String mmSeg = "";
 
             if(rb.isChecked()){
@@ -70,6 +100,15 @@ public class OptionGrid extends Activity {
             }else{
                 mmSeg = "50";
             }
+
+            String direccion = "";
+
+            if(rbDir.isChecked()){
+                direccion = "Horizontal";
+            }else{
+                direccion = "Vertical";
+            }
+
             int width = 1440;
             int height = 1080;
             //Get Resolution Selected camera
@@ -103,10 +142,13 @@ public class OptionGrid extends Activity {
             String path = Environment.getExternalStorageDirectory().getPath() + "/ECG-Analyzer/";
 
 
-            String dataSet = "Datos para ECG.jpg:\n" + "Velocidad papel: " + mmSeg + "mm/s \n"
+            String dataSet = "Datos para ECG:\n"
+                    + "Velocidad papel: " + mmSeg + "mm/s \n"
                     + "Voltaje: " + textFromEd + "mm/mV \n"
+                    + "Lineas Direccion: " + direccion  + "\n"
+                    + "Lineas grosor: " + spinnerLineText + "\n"
                     + "Tamaño: " + width + "x" + height + "\n"
-                    +"Tamaño rejilla: " + spinnerText;
+                    +"Tamaño rejilla: " + spinnerGridText;
 
             try{
                 File settings = new File(path, "sharedGridOptions.txt");

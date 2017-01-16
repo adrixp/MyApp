@@ -995,7 +995,7 @@ public class Camera2BasicFragment extends Fragment
 
         public void lanzarOptions(String msg, final String path, final String name) {
 
-            new AlertDialog.Builder(getActivity()).setTitle(getString(R.string.proccesOrnotTitleDer))
+            new AlertDialog.Builder(getActivity()).setTitle(getString(R.string.proccesOrnotTitle))
                     .setMessage(msg)
                     .setPositiveButton(getString(R.string.proccesOrnotYes), new DialogInterface.OnClickListener() {
                         public void onClick(DialogInterface dialog, int whichButton) {
@@ -1207,11 +1207,11 @@ public class Camera2BasicFragment extends Fragment
             accels = null; ////retrigger the loop when things are repopulated
 
             RelativeLayout le = (RelativeLayout) getView().findViewById(R.id.rlcamera);
-            if (pitch >= 80.0F && pitch < 91.0F && isRed) {
+            if (pitch >= 88.0F && pitch < 91.0F && isRed) {
                 le.setBackgroundResource(R.drawable.take_foto_border_green);
                 isRed = false;
                 inRange = true;
-            }else if (pitch < 80.0F || pitch >= 91.0F){
+            }else if (pitch < 88.0F || pitch >= 91.0F){
                 if(!isRed){
                     le.setBackgroundResource(R.drawable.take_foto_border_red);
                     isRed = true;
