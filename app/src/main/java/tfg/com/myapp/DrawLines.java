@@ -71,9 +71,17 @@ public class DrawLines extends View {
 
         String dataSet = readFile();
         String direction = "";
+        int numVert = 10;
+        int numHoriz = 5;
 
         if(dataSet != null && dataSet != ""){
             String settingsParts [] = dataSet.split("\n");
+
+            String numlines = settingsParts[settingsParts.length-5].split(" ")[2];
+            numVert = Integer.parseInt(numlines.split("/")[1]) + 3;
+            numHoriz = Integer.parseInt(numlines.split("/")[0]) + 1;
+
+            Log.i(TAG, "Traza y: " + numHoriz + "h " + numVert + "v");
 
             direction = settingsParts[settingsParts.length-4].split(" ")[2];
             String widthLine = settingsParts[settingsParts.length-3].split(" ")[2].split("m")[0];
@@ -84,44 +92,46 @@ public class DrawLines extends View {
             height = Integer.parseInt(WyH[1]);
             width = Integer.parseInt(WyH[0]);
 
-            /*
-
-             String gridSettWyH [] = settingsParts[settingsParts.length-1].split(" ")[2].split("x");
+            String gridSettWyH [] = settingsParts[settingsParts.length-1].split(" ")[2].split("x");
             numPxH = Integer.parseInt(gridSettWyH[1]);
             numPxW = Integer.parseInt(gridSettWyH[0]);
 
-            Log.i(TAG, "Entra y: " + width + "x" + height + "rej: " + numPxW + "x" + numPxH);*/
+            Log.i(TAG, "Entra y: " + width + "x" + height + "rej: " + numPxW + "x" + numPxH);
         }
 
         if(direction.equals("Vertical")){
-            for (int i = canvas.getWidth()/10; i <= canvas.getWidth(); i = i + canvas.getWidth()/10){
+            Log.i(TAG, "Traza y: V");
+            for (int i = canvas.getWidth()/numVert; i <= canvas.getWidth(); i = i + canvas.getWidth()/numVert){
                 canvas.drawLine(i, 0, i, canvas.getHeight(), paint);
-                Log.i(TAG, "xxxxv: " + i);
+            }
+        }else if (direction.equals("Horizontal")){
+            Log.i(TAG, "Traza y: H");
+            for (int i = canvas.getHeight()/numHoriz; i <= canvas.getHeight(); i = i + canvas.getHeight()/numHoriz){
+                canvas.drawLine(0, i, canvas.getWidth(), i, paint);
+            }
+        }else if(direction.equals("Both")){
+            Log.i(TAG, "Traza y: Both");
+            for (int i = canvas.getWidth()/numVert; i <= canvas.getWidth(); i = i + canvas.getWidth()/numVert){
+                canvas.drawLine(i, 0, i, canvas.getHeight(), paint);
+            }
+            for (int i = canvas.getHeight()/numHoriz; i <= canvas.getHeight(); i = i + canvas.getHeight()/numHoriz){
+                canvas.drawLine(0, i, canvas.getWidth(), i, paint);
             }
         }else{
-            for (int i = canvas.getHeight()/5; i <= canvas.getHeight(); i = i + canvas.getHeight()/5){
-                canvas.drawLine(0, i, canvas.getWidth(), i, paint);
-                Log.i(TAG, "xxxxh: " + i);
-            }
-        }
-
-
-        /*
-         //Lineas Horiz
+            Log.i(TAG, "Traza y: Rejilla");
+            //Lineas Horiz
             //                1ºigual      3ºigual
             //ancho:1440 px  alto: 1080 px
             for (int i = 0; i <= width/numPxW; i++){
                 canvas.drawLine(i*numPxW, 0, i*numPxW, height, paint);
             }
-
-
-          //Lineas Verticales
+            //Lineas Verticales
             //             2ºigual  4ºigual
             //ancho:1440 px  alto: 1080 px
             for (int i = 0; i <= height/numPxH; i++){
                 canvas.drawLine(0, i*numPxH, width, i*numPxH, paint);
             }
+        }
 
-         */
     }
 }

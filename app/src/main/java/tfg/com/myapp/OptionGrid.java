@@ -33,6 +33,8 @@ public class OptionGrid extends Activity {
     private Spinner spinnerLines;
     private static final String TAG = "TFG:OptionGrid";
     EditText mEditext;
+    EditText vEditext;
+    EditText hEditext;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -41,6 +43,12 @@ public class OptionGrid extends Activity {
 
         mEditext = (EditText)findViewById(R.id.editText);
         mEditext.setText("10");
+
+        hEditext = (EditText)findViewById(R.id.editTextHoriz);
+        hEditext.setText("4");
+
+        vEditext = (EditText)findViewById(R.id.editTextVert);
+        vEditext.setText("10");
 
         spinnerGrid = (Spinner) findViewById(R.id.grid_spinner);
         // Create an ArrayAdapter using the string array and a default spinner layout
@@ -66,6 +74,8 @@ public class OptionGrid extends Activity {
     public void onResume() {
         super.onResume();
         mEditext.setInputType(InputType.TYPE_CLASS_NUMBER);
+        vEditext.setInputType(InputType.TYPE_CLASS_NUMBER);
+        hEditext.setInputType(InputType.TYPE_CLASS_NUMBER);
 
     }
 
@@ -73,11 +83,14 @@ public class OptionGrid extends Activity {
         float min = 5;
         float max = 20;
 
-        mEditext = (EditText)findViewById(R.id.editText);
         String textFromEd = mEditext.getText().toString();
+        String textNumberLH = hEditext.getText().toString();
+        String textNumberLV = vEditext.getText().toString();
 
         RadioButton rb = (RadioButton) findViewById(R.id.radioButton);
         RadioButton rbDir = (RadioButton) findViewById(R.id.radioButtonHoriz);
+        RadioButton rbDirB = (RadioButton) findViewById(R.id.radioButtonBoth);
+        RadioButton rbDirG = (RadioButton) findViewById(R.id.radioButtonGrid);
 
         if(textFromEd.equals("")) {
             Toast.makeText(OptionGrid.this, getString(R.string.MustIntro), Toast.LENGTH_LONG).show();
@@ -105,6 +118,10 @@ public class OptionGrid extends Activity {
 
             if(rbDir.isChecked()){
                 direccion = "Horizontal";
+            }else if (rbDirB.isChecked()){
+                direccion = "Both";
+            }else if (rbDirG.isChecked()){
+                direccion = "Grid";
             }else{
                 direccion = "Vertical";
             }
@@ -145,6 +162,7 @@ public class OptionGrid extends Activity {
             String dataSet = "Datos para ECG:\n"
                     + "Velocidad papel: " + mmSeg + "mm/s \n"
                     + "Voltaje: " + textFromEd + "mm/mV \n"
+                    + "Lineas Numero(h/v): " + textNumberLH + "/" + textNumberLV + "\n"
                     + "Lineas Direccion: " + direccion  + "\n"
                     + "Lineas grosor: " + spinnerLineText + "\n"
                     + "Tamaño: " + width + "x" + height + "\n"
@@ -162,6 +180,8 @@ public class OptionGrid extends Activity {
             }
             Intent i = new Intent(this, GridActivityCamOpBeta.class);
             mEditext.setInputType(InputType.TYPE_NULL);
+            hEditext.setInputType(InputType.TYPE_NULL);
+            vEditext.setInputType(InputType.TYPE_NULL);
             startActivity(i);
         }else{
             Toast.makeText(OptionGrid.this, getString(R.string.NotInRangeVolt), Toast.LENGTH_LONG).show();

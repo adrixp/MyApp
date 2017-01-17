@@ -50,7 +50,10 @@
     <string name="veinticincoS">25 mm/s</string>
     <string name="CincuentaS">50 mm/s</string>
     <string name="milisV">  mm/mV</string>
-    <string name="ten">  10</string>
+    <string name="ten"> 10</string>
+    <string name="four"> 4</string>
+    <string name="h">h</string>
+    <string name="v">v</string>
 
     <string name="TotalTime">Total Time:</string>
     <string name="VelocPaper">Paper Veloc:</string>
@@ -94,10 +97,11 @@
     <string name="proccesOrnotTitleDer">Image cropped!</string>
     <string name="proccesOrnotDer">Would you like to see it?</string>
 
-    <string name="gridAdj">Grid Adjustment:</string>
+    <string name="grid">Use Grid</string>
+    <string name="both">Both</string>
     <string name="direction">Direction</string>
     <string name="horizontal">Horizontal</string>
     <string name="vertical">Vertical</string>
     <string name="gridSizeOp">Grid Size</string>
-    <string name="lineSzSizeOp">Line Width</string>
+    <string name="lineSzSizeOp">Lines-Width</string>
 </resources>

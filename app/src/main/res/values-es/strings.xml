@@ -60,7 +60,10 @@
 	<string name="veinticincoS">25 mm/s</string>
 	<string name="CincuentaS">50 mm/s</string>
 	<string name="milisV">  mm/mV</string>
-	<string name="ten">  10</string>
+	<string name="ten"> 10</string>
+	<string name="four"> 4</string>
+    <string name="h">h</string>
+    <string name="v">v</string>
 
     <string-array name="grid_array">
         <item>10mm</item>
@@ -94,10 +97,11 @@
 	<string name="proccesOrnotTitleDer">Imagen recortada!</string>
 	<string name="proccesOrnotDer">Querrías verla?</string>
 
-	<string name="gridAdj">Ajuste de la Rejilla:</string>
+	<string name="grid">Rejilla</string>
+	<string name="both">Ambos</string>
 	<string name="direction">Dirección</string>
 	<string name="horizontal">Horizontal</string>
 	<string name="vertical">Vertical</string>
 	<string name="gridSizeOp">Tamaño Rejilla</string>
-	<string name="lineSzSizeOp">Grosor Línea</string>
+	<string name="lineSzSizeOp">Línea/Grosor</string>
 </resources>
