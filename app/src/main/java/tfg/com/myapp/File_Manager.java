@@ -195,8 +195,8 @@ public class File_Manager extends Activity{
 			nombre = Environment.getExternalStorageDirectory()+ parsePath(path)+nombre; //ruta del archivo
 
 			menu.setHeaderTitle(getString(R.string.OptionsMenuFMC) + " " + li.get(pos).getNombre());
-			menu.add(0, 1, 0, getString(R.string.OptionsMenuFMAnalyze));
-			menu.add(0, 2, 1, getString(R.string.OptionsMenuFMView));
+			menu.add(0, 1, 0, getString(R.string.OptionsMenuFMRotate));
+			menu.add(0, 2, 1, getString(R.string.OptionsMenuFMCrop));
 			menu.add(0, 3, 2, getString(R.string.OptionsMenuFMDelete));
 			menu.add(0, 4, 3, getString(R.string.OptionsMenuFMDeleteAll));
 			menu.add(0, 5, 4, getString(R.string.OptionsMenuFMCancel));
@@ -223,9 +223,12 @@ public class File_Manager extends Activity{
 	public boolean onContextItemSelected(MenuItem item){
 		int itemId = item.getItemId();
 
-		if (itemId == 1) {//Analizar			
-
-		}else if (itemId == 2){//ver
+		if (itemId == 1) {//Rotar
+			Intent i = new Intent(File_Manager.this, Photo_Rotate.class);
+			i.putExtra("photoPath", nombre);
+			i.putExtra("photoName", namePrev);
+			startActivity(i);
+		}else if (itemId == 2){//Ver o Cortar
 			if(isTxt){
 				Intent i = new Intent(File_Manager.this, File_View.class);
 				i.putExtra("filePath", nombre);

@@ -16,6 +16,8 @@
 	<string name="CantOpen">No se pudo abrir directorio</string>
 	<string name="OptionsMenuFMC">Opciones</string>
 	<string name="OptionsMenuFMAnalyze">Analizar</string>
+    <string name="OptionsMenuFMCrop">Cortar</string>
+    <string name="OptionsMenuFMRotate">Rotar</string>
 	<string name="OptionsMenuFMView">Ver</string>
 	<string name="OptionsMenuFMCancel">Cancelar</string>
 	<string name="OptionsMenuFMDelete">Borrar</string>
@@ -84,12 +86,24 @@
 		<item>10mm</item>
     </string-array>
 
+    <string-array name="color_array">
+        <item>Verde</item>
+        <item>Azul</item>
+        <item>Rojo</item>
+        <item>Cyan</item>
+        <item>Magenta</item>
+        <item>Blanco</item>
+    </string-array>
+
 	<string name="texSpinner">Tamaño rejilla:</string>
 
-	<string name="textcropbutton">Crop</string>
+	<string name="textcropbutton">Cortar</string>
+	<string name="textrotbutton">Rotar</string>
 	<string name="photoCropped">La foto ha sido recortada y guardada</string>
 	<string name="working">Procesando...</string>
-	<string name="proccesOrnot">Quiere procesar la imagen?</string>
+	<string name="proccesOrnot">Quiere Rotar la imagen?</string>
+	<string name="cropOrnot">Quiere Recortar la imagen?</string>
+	<string name="rotated">Imagen rotada!</string>
 	<string name="proccesOrnotYes">Si!</string>
 	<string name="proccesOrnotLater">Luego</string>
 	<string name="proccesOrnotTitle">Imagen capturada!</string>

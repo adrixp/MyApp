@@ -14,9 +14,9 @@ import java.io.File;
 import java.io.FileReader;
 import java.io.IOException;
 
-public class DrawLines extends View {
+public class DrawLinesRot extends View {
     public Paint paint = new Paint();
-    private static final String TAG = "TFG:DrawLines:Activity";
+    private static final String TAG = "TFG:DrawLinesRot:Act";
     //5 mm son 18.897638 px
     // 4px son 1 mm ||| 20px son 5mm ||| 40px son 10mm
 
@@ -26,15 +26,15 @@ public class DrawLines extends View {
     public int numPxW = 20;
 
 
-    public DrawLines(Context context) {
+    public DrawLinesRot(Context context) {
         super(context);
     }
 
-    public DrawLines(Context context, AttributeSet attrs, int defStyle) {
+    public DrawLinesRot(Context context, AttributeSet attrs, int defStyle) {
         super(context, attrs, defStyle);
     }
 
-    public DrawLines(Context context, AttributeSet attrs) {
+    public DrawLinesRot(Context context, AttributeSet attrs) {
         super(context, attrs);
     }
 
@@ -67,7 +67,7 @@ public class DrawLines extends View {
         Log.i(TAG, "Traza y: canvas Width: " + canvas.getWidth());
         Log.i(TAG, "Traza y: canvas Height: " + canvas.getHeight());
 
-        int canvasWidth = canvas.getWidth()*3/4;
+        int canvasWidth = canvas.getWidth();
 
         String dataSet = readFile();
         String direction = "";
@@ -117,7 +117,7 @@ public class DrawLines extends View {
 
         if(direction.equals("Vertical")){
             Log.i(TAG, "Traza y: V");
-            for (int i = canvas.getWidth()/numVert; i < canvas.getWidth(); i = i + canvas.getWidth()/numVert){
+            for (int i = canvas.getWidth()/numVert; i < canvas.getWidth() -10; i = i + canvas.getWidth()/numVert){
                 canvas.drawLine(i, 0, i, canvas.getHeight(), paint);
             }
         }else if (direction.equals("Horizontal")){
@@ -127,7 +127,7 @@ public class DrawLines extends View {
             }
         }else if(direction.equals("Both")){
             Log.i(TAG, "Traza y: Both");
-            for (int i = canvasWidth/numVert; i < canvasWidth; i = i + canvasWidth/numVert){
+            for (int i = canvasWidth/numVert; i < canvasWidth -10; i = i + canvasWidth/numVert){
                 canvas.drawLine(i, 0, i, canvas.getHeight(), paint);
             }
             for (int i = canvas.getHeight()/numHoriz; i < canvas.getHeight() -10; i = i + canvas.getHeight()/numHoriz){

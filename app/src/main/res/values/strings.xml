@@ -16,6 +16,8 @@
     <string name="CantOpen">Can not open the folder</string>
     <string name="OptionsMenuFMC">Options</string>
     <string name="OptionsMenuFMAnalyze">Analyze</string>
+    <string name="OptionsMenuFMCrop">Crop</string>
+    <string name="OptionsMenuFMRotate">Rotate</string>
     <string name="OptionsMenuFMView">View</string>
     <string name="OptionsMenuFMCancel">Cancel</string>
     <string name="OptionsMenuFMDelete">Delete</string>
@@ -84,12 +86,24 @@
         <item>10mm</item>
     </string-array>
 
+    <string-array name="color_array">
+        <item>Green</item>
+        <item>Blue</item>
+        <item>Red</item>
+        <item>Cyan</item>
+        <item>Magenta</item>
+        <item>White</item>
+    </string-array>
+
     <string name="texSpinner">Grid Square Size:</string>
     <string name="textcropbutton">Crop</string>
+    <string name="textrotbutton">Rotate</string>
 
     <string name="photoCropped">Photo has been cropped and saved</string>
     <string name="working">Working...</string>proccesOrnot
-    <string name="proccesOrnot">Would you like to Proccess image?</string>
+    <string name="proccesOrnot">Would you like to Rotate the image?</string>
+    <string name="cropOrnot">Would you like to Crop the image?</string>
+    <string name="rotated">Image Rotated!</string>
     <string name="proccesOrnotYes">Yes!</string>
     <string name="proccesOrnotLater">Later</string>
     <string name="proccesOrnotTitle">Image captured!</string>

@@ -999,7 +999,7 @@ public class Camera2BasicFragment extends Fragment
                     .setMessage(msg)
                     .setPositiveButton(getString(R.string.proccesOrnotYes), new DialogInterface.OnClickListener() {
                         public void onClick(DialogInterface dialog, int whichButton) {
-                            Intent i = new Intent(getActivity(), Photo_Preview.class);
+                            Intent i = new Intent(getActivity(), Photo_Rotate.class);
                             i.putExtra("photoPath", path + "/" + name);
                             i.putExtra("photoName", name);
                             startActivity(i);

@@ -31,6 +31,7 @@ public class OptionGrid extends Activity {
 
     private Spinner spinnerGrid;
     private Spinner spinnerLines;
+    private Spinner spinnerColor;
     private static final String TAG = "TFG:OptionGrid";
     EditText mEditext;
     EditText vEditext;
@@ -68,6 +69,14 @@ public class OptionGrid extends Activity {
         adapterLines.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
         // Apply the adapter to the spinner
         spinnerLines.setAdapter(adapterLines);
+
+        spinnerColor = (Spinner) findViewById(R.id.color_spinner);
+        ArrayAdapter<CharSequence> adapterColor = ArrayAdapter.createFromResource(this,
+                R.array.color_array, android.R.layout.simple_spinner_item);
+        // Specify the layout to use when the list of choices appears
+        adapterColor.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
+        // Apply the adapter to the spinner
+        spinnerColor.setAdapter(adapterColor);
     }
 
     @Override
@@ -97,6 +106,9 @@ public class OptionGrid extends Activity {
         }else if(Float.parseFloat(textFromEd)>= min && Float.parseFloat(textFromEd)<= max){
             String spinnerGridText = spinnerGrid.getSelectedItem().toString();
             String spinnerLineText = spinnerLines.getSelectedItem().toString();
+            String spinnerColorText = spinnerColor.getSelectedItem().toString();
+
+
             if(spinnerGridText.equals("1mm")){
                 spinnerGridText = "4x4 px (1mm)";
             }else if(spinnerGridText.equals("5mm")){
@@ -104,7 +116,6 @@ public class OptionGrid extends Activity {
             }else{
                 spinnerGridText = "40x40 px (10mm)";
             }
-
 
             String mmSeg = "";
 
@@ -162,6 +173,7 @@ public class OptionGrid extends Activity {
             String dataSet = "Datos para ECG:\n"
                     + "Velocidad papel: " + mmSeg + "mm/s \n"
                     + "Voltaje: " + textFromEd + "mm/mV \n"
+                    + "Color: " + spinnerColorText + "\n"
                     + "Lineas Numero(h/v): " + textNumberLH + "/" + textNumberLV + "\n"
                     + "Lineas Direccion: " + direccion  + "\n"
                     + "Lineas grosor: " + spinnerLineText + "\n"
