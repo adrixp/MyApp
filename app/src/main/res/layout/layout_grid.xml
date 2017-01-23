@@ -15,7 +15,7 @@
         android:visibility="gone"
         android:id="@+id/OpenCvView" />
 
-    <tfg.com.myapp.DrawLines
+    <tfg.com.helpers.DrawLines
         android:id="@+id/drawViewLines"
         android:layout_width="match_parent"
         android:layout_height="match_parent" />

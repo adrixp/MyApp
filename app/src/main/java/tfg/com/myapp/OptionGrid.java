@@ -170,8 +170,7 @@ public class OptionGrid extends Activity {
             String path = Environment.getExternalStorageDirectory().getPath() + "/ECG-Analyzer/";
 
 
-            String dataSet = "Datos para ECG:\n"
-                    + "Velocidad papel: " + mmSeg + "mm/s \n"
+            String dataSet = "Velocidad papel: " + mmSeg + "mm/s \n"
                     + "Voltaje: " + textFromEd + "mm/mV \n"
                     + "Color: " + spinnerColorText + "\n"
                     + "Lineas Numero(h/v): " + textNumberLH + "/" + textNumberLV + "\n"

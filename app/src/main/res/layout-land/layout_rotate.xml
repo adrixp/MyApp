@@ -8,14 +8,12 @@
     android:layout_height="match_parent">
 
 
-    <ImageView
-        android:id="@+id/photoRot"
+    <tfg.com.helpers.SandboxView
+        android:id="@+id/sandboxView"
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:contentDescription="@string/Nulo">
-    </ImageView>
+        android:layout_height="match_parent" />
 
-    <tfg.com.myapp.DrawLinesRot
+    <tfg.com.helpers.DrawLinesRot
         android:id="@+id/drawViewLines"
         android:layout_width="match_parent"
         android:layout_height="match_parent" />

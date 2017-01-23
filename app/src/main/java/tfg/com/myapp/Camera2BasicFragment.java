@@ -73,7 +73,8 @@ import java.util.Locale;
 import java.util.concurrent.Semaphore;
 import java.util.concurrent.TimeUnit;
 
-import static android.content.Context.SENSOR_SERVICE;
+import tfg.com.helpers.AutoFitTextureView;
+import tfg.com.helpers.DrawLines;
 
 /**
  * Created by PIZARROSAEXT on 05/09/2016.
@@ -1061,11 +1062,15 @@ public class Camera2BasicFragment extends Fragment
 
                         //Escribimos settings en el txt
                         String dataSet = readFile();
+                        dataSet = "Datos para " + namePhoto + ":\n"
+                                + "Path: " + path + "/" + namePhoto + "\n" + dataSet;
                         File settings = new File(path, "settings.txt");
                         FileOutputStream fos2 = new FileOutputStream(settings);
 
                         fos2.write(dataSet.getBytes());
                         fos2.close();
+
+                        //Escribimos el path
 
                         //Guardamos la rejilla
                         String settingsParts [] = dataSet.split("\n");

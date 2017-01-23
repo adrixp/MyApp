@@ -6,6 +6,7 @@ import android.graphics.Color;
 import android.net.Uri;
 import android.os.Bundle;
 import android.preference.PreferenceManager;
+import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.ImageView;
@@ -20,8 +21,11 @@ import me.littlecheesecake.croplayout.EditPhotoView;
 import me.littlecheesecake.croplayout.EditableImage;
 import me.littlecheesecake.croplayout.handler.OnBoxChangedListener;
 import me.littlecheesecake.croplayout.model.ScalableBox;
+import tfg.com.helpers.BitmapWorkerTask;
 
 public class Photo_Preview extends Activity {
+
+    private static final String TAG = "TFG:Preview:Activity";
 	
 	private String path;
     private String name;
@@ -50,9 +54,9 @@ public class Photo_Preview extends Activity {
         numcomp = Integer.parseInt(pref.getString("typeComp", "0")) * 10 + 10;
         isJpeg = Integer.parseInt(pref.getString("typeFormat", "0"));
 
-        System.out.println("numcomp: " + numcomp + " isJpeg: " + isJpeg);
+        //System.out.println("numcomp: " + numcomp + " isJpeg: " + isJpeg);
 
-        if (name.equals("ECG.jpg") || name.equals("ECG.png")){
+        if (name.equals("ECG.jpg") || name.equals("ECG.png") || name.equals("ECG_Rotated.jpg") || name.equals("ECG_Rotated.png")){
 
             setContentView(R.layout.layout_photo_preview);
 
@@ -83,6 +87,8 @@ public class Photo_Preview extends Activity {
 
             Uri myUri = Uri.parse(path);
             iV.setImageURI(myUri);
+
+            Log.i(TAG, "TRAZAX: iV height: " + iV.getHeight() + "width: " + iV.getWidth());
 
             Button bt = (Button) findViewById(R.id.cropButton);
             bt.setText(getString(R.string.OptionsMenuFMAnalyze));

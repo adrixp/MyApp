@@ -1,4 +1,4 @@
-package tfg.com.myapp;
+package tfg.com.helpers;
 
 import android.app.Activity;
 import android.app.AlertDialog;
@@ -14,6 +14,9 @@ import android.widget.Button;
 import android.widget.Toast;
 import java.io.File;
 import java.io.FileOutputStream;
+
+import tfg.com.myapp.Photo_Preview;
+import tfg.com.myapp.R;
 
 /**
  * Created by adria on 09/11/2016.
