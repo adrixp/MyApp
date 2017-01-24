@@ -7,11 +7,14 @@ import android.content.Intent;
 import android.content.SharedPreferences;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
+import android.graphics.Color;
 import android.graphics.Matrix;
 import android.os.Bundle;
 import android.preference.PreferenceManager;
 import android.util.Log;
 import android.view.View;
+import android.widget.Button;
+import android.widget.Toast;
 
 import java.io.File;
 import java.io.FileOutputStream;
@@ -73,6 +76,10 @@ public class Photo_Rotate extends Activity{
     }
 
     public void rotate(View view) {
+        Toast.makeText(this, getString(R.string.working), Toast.LENGTH_SHORT).show();
+        Button bt = (Button) findViewById(R.id.rotateButton);
+        bt.setEnabled(false);
+        bt.setBackgroundColor(Color.parseColor("#BDBDBD"));
 
         Bitmap myBitmap = BitmapFactory.decodeFile(path);
         Bitmap rotateBitmap = RotateBitmap(myBitmap,getDegreesFromRadians(sandboxView.angle));
@@ -100,7 +107,7 @@ public class Photo_Rotate extends Activity{
         }catch (Exception e){
             e.printStackTrace();
         }
-        lanzarOptions(pathReal + "/" + newName,newName,this);
+        lanzarOptions(pathReal + "/" + newName,newName,this, bt);
     }
 
     public static Bitmap RotateBitmap(Bitmap source, float angle)
@@ -111,7 +118,9 @@ public class Photo_Rotate extends Activity{
     }
 
 
-    public void lanzarOptions(final String p, final String n, final Activity activity) {
+    public void lanzarOptions(final String p, final String n, final Activity activity, Button bt) {
+        bt.setEnabled(true);
+        bt.setBackgroundResource(R.drawable.mybutton);
 
         new AlertDialog.Builder(activity).setTitle(getString(R.string.rotated))
                 .setMessage(getString(R.string.cropOrnot))
