@@ -11,7 +11,6 @@ import android.graphics.Color;
 import android.graphics.Matrix;
 import android.os.Bundle;
 import android.preference.PreferenceManager;
-import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.Toast;
@@ -38,7 +37,7 @@ public class Photo_Rotate extends Activity{
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.layout_rotate);
+        setContentView(R.layout.layout_photo_rotate);
 
         Bundle extras = getIntent().getExtras();
         path = extras.getString("photoPath");
@@ -60,9 +59,6 @@ public class Photo_Rotate extends Activity{
         }else{
             sandboxView.scale = 0.80f;
         }
-
-
-        Log.i(TAG, "TRAZAX: height: " + myBitmap.getHeight() + "width: " + myBitmap.getWidth());
 
         SharedPreferences pref = PreferenceManager
                 .getDefaultSharedPreferences(this);
@@ -127,7 +123,7 @@ public class Photo_Rotate extends Activity{
                 .setPositiveButton(getString(R.string.proccesOrnotYes), new DialogInterface.OnClickListener() {
                     public void onClick(DialogInterface dialog, int whichButton) {
 
-                        Intent i = new Intent(activity, Photo_Preview.class);
+                        Intent i = new Intent(activity, Photo_Crop.class);
                         i.putExtra("photoPath", p);
                         i.putExtra("photoName", n);
                         startActivity(i);

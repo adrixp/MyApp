@@ -11,6 +11,7 @@ import android.content.Intent;
 import android.graphics.Color;
 import android.os.Bundle;
 import android.os.Environment;
+import android.util.Log;
 import android.view.ContextMenu;
 import android.view.KeyEvent;
 import android.view.LayoutInflater;
@@ -190,32 +191,46 @@ public class File_Manager extends Activity{
 		}
 
 		String [] s = li.get(pos).getNombre().split("\\.");
+
+        nombre = Environment.getExternalStorageDirectory()+ parsePath(path)+nombre; //ruta del archivo
 						
-		if (s[s.length-1].equals("jpg")|| s[s.length-1].equals("png")) {
-			nombre = Environment.getExternalStorageDirectory()+ parsePath(path)+nombre; //ruta del archivo
+		if (li.get(pos).getNombre().startsWith("ECG") && !li.get(pos).getNombre().startsWith("ECG-")) {
 
 			menu.setHeaderTitle(getString(R.string.OptionsMenuFMC) + " " + li.get(pos).getNombre());
-			menu.add(0, 1, 0, getString(R.string.OptionsMenuFMRotate));
-			menu.add(0, 2, 1, getString(R.string.OptionsMenuFMCrop));
-			menu.add(0, 3, 2, getString(R.string.OptionsMenuFMDelete));
-			menu.add(0, 4, 3, getString(R.string.OptionsMenuFMDeleteAll));
-			menu.add(0, 5, 4, getString(R.string.OptionsMenuFMCancel));
+            menu.add(0, 1, 0, getString(R.string.OptionsMenuFMView));
+			menu.add(0, 2, 1, getString(R.string.OptionsMenuFMRotate));
+            menu.add(0, 3, 2, getString(R.string.OptionsMenuFMCrop));
+			menu.add(0, 5, 3, getString(R.string.OptionsMenuFMDelete));
+			menu.add(0, 6, 4, getString(R.string.OptionsMenuFMDeleteAll));
+			menu.add(0, 7, 5, getString(R.string.OptionsMenuFMCancel));
+        }else if(li.get(pos).getNombre().startsWith("Derivacion")){
+
+            menu.setHeaderTitle(getString(R.string.OptionsMenuFMC) + " " + li.get(pos).getNombre());
+            menu.add(0, 1, 0, getString(R.string.OptionsMenuFMView));
+            menu.add(0, 4, 1, getString(R.string.OptionsMenuFMEraseM));
+            menu.add(0, 5, 2, getString(R.string.OptionsMenuFMDelete));
+            menu.add(0, 6, 3, getString(R.string.OptionsMenuFMDeleteAll));
+            menu.add(0, 7, 4, getString(R.string.OptionsMenuFMCancel));
+        }else if(li.get(pos).getNombre().startsWith("Grid")){
+
+            menu.setHeaderTitle(getString(R.string.OptionsMenuFMC) + " " + li.get(pos).getNombre());
+            menu.add(0, 1, 0, getString(R.string.OptionsMenuFMView));
+            menu.add(0, 5, 1, getString(R.string.OptionsMenuFMDelete));
+            menu.add(0, 6, 2, getString(R.string.OptionsMenuFMDeleteAll));
+            menu.add(0, 7, 3, getString(R.string.OptionsMenuFMCancel));
 		}else if(s[s.length - 1].equals("txt")){
-			nombre = Environment.getExternalStorageDirectory()+ parsePath(path)+nombre; //ruta del archivo
 			isTxt = true;
 			menu.setHeaderTitle(getString(R.string.OptionsMenuFMC) + " " + li.get(pos).getNombre());
-			menu.add(0, 2, 0, getString(R.string.OptionsMenuFMView));
-			menu.add(0, 3, 1, getString(R.string.OptionsMenuFMDelete));
-			menu.add(0, 4, 2, getString(R.string.OptionsMenuFMDeleteAll));
-			menu.add(0, 5, 3, getString(R.string.OptionsMenuFMCancel));
+			menu.add(0, 1, 0, getString(R.string.OptionsMenuFMView));
+			menu.add(0, 5, 1, getString(R.string.OptionsMenuFMDelete));
+			menu.add(0, 6, 2, getString(R.string.OptionsMenuFMDeleteAll));
+			menu.add(0, 7, 3, getString(R.string.OptionsMenuFMCancel));
 		}else{
 			//aqui borrar directorios
-			nombre = Environment.getExternalStorageDirectory()+ parsePath(path)+nombre; //ruta del archivo
-
 			menu.setHeaderTitle(getString(R.string.OptionsMenuFMC) + " " + li.get(pos).getNombre());
-			menu.add(0, 3, 0, getString(R.string.OptionsMenuFMDelete));
-			menu.add(0, 4, 1, getString(R.string.OptionsMenuFMDeleteAll));
-			menu.add(0, 5, 2, getString(R.string.OptionsMenuFMCancel));
+			menu.add(0, 5, 0, getString(R.string.OptionsMenuFMDelete));
+			menu.add(0, 6, 1, getString(R.string.OptionsMenuFMDeleteAll));
+			menu.add(0, 7, 2, getString(R.string.OptionsMenuFMCancel));
 		}
 	}
 
@@ -223,24 +238,36 @@ public class File_Manager extends Activity{
 	public boolean onContextItemSelected(MenuItem item){
 		int itemId = item.getItemId();
 
-		if (itemId == 1) {//Rotar
+		if (itemId == 1) {//Ver
+            if(isTxt){
+                Intent i = new Intent(File_Manager.this, File_View.class);
+                i.putExtra("filePath", nombre);
+                startActivity(i);
+            }else{
+                Intent i = new Intent(File_Manager.this, Photo_Preview.class);
+                i.putExtra("photoPath", nombre);
+                i.putExtra("photoName", namePrev);
+                startActivity(i);
+            }
+		}else if (itemId == 2){//Rotar
 			Intent i = new Intent(File_Manager.this, Photo_Rotate.class);
-			i.putExtra("photoPath", nombre);
-			i.putExtra("photoName", namePrev);
-			startActivity(i);
-		}else if (itemId == 2){//Ver o Cortar
-			if(isTxt){
-				Intent i = new Intent(File_Manager.this, File_View.class);
-				i.putExtra("filePath", nombre);
-				startActivity(i);
-			}else{
-				Intent i = new Intent(File_Manager.this, Photo_Preview.class);
-				i.putExtra("photoPath", nombre);
-				i.putExtra("photoName", namePrev);
-				startActivity(i);
-			}
+            i.putExtra("photoPath", nombre);
+            i.putExtra("photoName", namePrev);
+            startActivity(i);
 
-		}else if (itemId == 3){//borrar
+        }else if (itemId == 3){//Cortar
+            Intent i = new Intent(File_Manager.this, Photo_Crop.class);
+            i.putExtra("photoPath", nombre);
+            i.putExtra("photoName", namePrev);
+            startActivity(i);
+
+        }else if (itemId == 4){//Borrar marcas
+            Intent i = new Intent(File_Manager.this, Photo_EraseMarks.class);
+            i.putExtra("photoPath", nombre);
+            i.putExtra("photoName", namePrev);
+            startActivity(i);
+
+        }else if (itemId == 5){//Borrar
 			File fd = new File(nombre);
 			if(fd.exists()) {
 				deleteFile(fd);
@@ -248,12 +275,12 @@ public class File_Manager extends Activity{
 				AdapFiles(listV, parsePath(path));
 			}
 
-		}else if(itemId == 4){ //borrar todo
+		}else if(itemId == 6){ //Borrar todos los ficheros
 			deleteAll(parsePath(path));
-
 	    	li.clear();
 			AdapFiles(listV, parsePath(path));
 		}
+
 		return true;
 	}
 

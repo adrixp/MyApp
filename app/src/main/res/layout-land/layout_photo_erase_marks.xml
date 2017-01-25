@@ -3,23 +3,23 @@
     xmlns:android="http://schemas.android.com/apk/res/android"
     android:id="@+id/main_holder"
     android:orientation="vertical"
-    android:background="@color/colorblack"
     android:layout_width="match_parent"
+    android:background="@color/colorblack"
     android:layout_height="match_parent">
     <ImageView
-        android:id="@+id/photoPrev"
+        android:id="@+id/photoErase"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:contentDescription="@string/Nulo" >
     </ImageView>
     <Button
-        android:id="@+id/cropButton"
+        android:id="@+id/eraseButton"
         android:layout_width="70dp"
         android:layout_height="wrap_content"
         android:onClick="crop"
         android:layout_marginTop="5dp"
         android:layout_marginRight="5dp"
-        android:text="@string/textcropbutton"
+        android:text="@string/texterasebutton"
         android:textColor="#ffffff"
         android:layout_alignParentRight="true"
         android:layout_alignParentTop="true"

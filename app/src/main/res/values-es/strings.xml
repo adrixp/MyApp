@@ -19,6 +19,7 @@
     <string name="OptionsMenuFMCrop">Cortar</string>
     <string name="OptionsMenuFMRotate">Rotar</string>
 	<string name="OptionsMenuFMView">Ver</string>
+	<string name="OptionsMenuFMEraseM">Erase Marks</string>
 	<string name="OptionsMenuFMCancel">Cancelar</string>
 	<string name="OptionsMenuFMDelete">Borrar</string>
 	<string name="OptionsMenuFMDeleteAll">Borrar todo</string>
@@ -118,4 +119,5 @@
 	<string name="vertical">Vertical</string>
 	<string name="gridSizeOp">Tamaño Rejilla</string>
 	<string name="lineSzSizeOp">Línea/Grosor</string>
+	<string name="texterasebutton">Save</string>
 </resources>

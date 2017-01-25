@@ -69,7 +69,7 @@
             android:theme="@style/Theme.Dialog.TittleCenter" >
         </activity>
         <activity
-            android:name=".Photo_Preview"
+            android:name=".Photo_Crop"
             android:configChanges="keyboardHidden|orientation"
             android:label="@string/app_name"
             android:screenOrientation="landscape"
@@ -77,6 +77,20 @@
         </activity>
         <activity
             android:name=".Photo_Rotate"
+            android:configChanges="keyboardHidden|orientation"
+            android:label="@string/app_name"
+            android:screenOrientation="landscape"
+            android:theme="@android:style/Theme.Material.Light.NoActionBar.Fullscreen" >
+        </activity>
+        <activity
+            android:name=".Photo_Preview"
+            android:configChanges="keyboardHidden|orientation"
+            android:label="@string/app_name"
+            android:screenOrientation="landscape"
+            android:theme="@android:style/Theme.Material.Light.NoActionBar.Fullscreen" >
+        </activity>
+        <activity
+            android:name=".Photo_EraseMarks"
             android:configChanges="keyboardHidden|orientation"
             android:label="@string/app_name"
             android:screenOrientation="landscape"
