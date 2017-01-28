@@ -25,6 +25,8 @@ public class DrawLinesRot extends View {
     public int numPxH = 20;
     public int numPxW = 20;
 
+    public String path = "";
+
 
     public DrawLinesRot(Context context) {
         super(context);
@@ -39,8 +41,7 @@ public class DrawLinesRot extends View {
     }
 
     public String readFile(){
-        String path = Environment.getExternalStorageDirectory().getPath() + "/ECG-Analyzer";
-        File file = new File(path, "sharedGridOptions.txt");
+        File file = new File(path, "settings.txt");
         //Read text from file
         String line;
         String text = "";
@@ -64,8 +65,7 @@ public class DrawLinesRot extends View {
 
     @Override
     public void onDraw(Canvas canvas) {
-        Log.i(TAG, "Traza y: canvas Width: " + canvas.getWidth());
-        Log.i(TAG, "Traza y: canvas Height: " + canvas.getHeight());
+        Log.i(TAG, "Traza y: canvas Width: " + canvas.getWidth() + " Height: " + canvas.getHeight());
 
         int canvasWidth = canvas.getWidth();
 
@@ -133,7 +133,7 @@ public class DrawLinesRot extends View {
             for (int i = canvas.getHeight()/numHoriz; i < canvas.getHeight() -10; i = i + canvas.getHeight()/numHoriz){
                 canvas.drawLine(0, i, canvas.getWidth(), i, paint);
             }
-        }else{
+        }else if(direction.equals("Grid")){
             Log.i(TAG, "Traza y: Rejilla");
             //Lineas Horiz
             //                1ºigual      3ºigual

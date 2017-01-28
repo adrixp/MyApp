@@ -133,7 +133,7 @@ public class DrawLines extends View {
             for (int i = canvas.getHeight()/numHoriz; i < canvas.getHeight() -10; i = i + canvas.getHeight()/numHoriz){
                 canvas.drawLine(0, i, canvas.getWidth(), i, paint);
             }
-        }else{
+        }else if(direction.equals("Grid")){
             Log.i(TAG, "Traza y: Rejilla");
             //Lineas Horiz
             //                1ºigual      3ºigual

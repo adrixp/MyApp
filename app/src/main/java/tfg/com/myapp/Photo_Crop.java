@@ -3,13 +3,10 @@ package tfg.com.myapp;
 import android.app.Activity;
 import android.content.SharedPreferences;
 import android.graphics.Color;
-import android.net.Uri;
 import android.os.Bundle;
 import android.preference.PreferenceManager;
-import android.util.Log;
 import android.view.View;
 import android.widget.Button;
-import android.widget.ImageView;
 import android.widget.Toast;
 
 import java.io.BufferedReader;
@@ -22,10 +19,12 @@ import me.littlecheesecake.croplayout.EditableImage;
 import me.littlecheesecake.croplayout.handler.OnBoxChangedListener;
 import me.littlecheesecake.croplayout.model.ScalableBox;
 import tfg.com.helpers.BitmapWorkerTask;
+import tfg.com.helpers.DrawBoxCrop;
 
 public class Photo_Crop extends Activity {
 
     private static final String TAG = "TFG:Crop:Activity";
+    DrawBoxCrop drawBoxCrop;
 	
 	private String path;
     private String name;
@@ -34,6 +33,9 @@ public class Photo_Crop extends Activity {
     private int yIni = 0;
     private int xFin = 640;
     private int yFin = 880;
+
+    private int xFinReal = 640;
+    private int yFinReal = 880;
 
     private int isJpeg = 0;
     private int numcomp = 0;
@@ -59,11 +61,16 @@ public class Photo_Crop extends Activity {
         String [] parts = readFile().split("\n");
         String [] partsEnd = parts[parts.length -2].split(" ")[1].split("x");
 
+        xFinReal = Integer.parseInt(partsEnd[0]);
+        yFinReal = Integer.parseInt(partsEnd[1]);
+
         xFin = Integer.parseInt(partsEnd[0]);
         yFin = Integer.parseInt(partsEnd[1])/3;
 
         image.setBox(new ScalableBox(0,0, xFin, yFin));
         imageView.initView(this, image);
+
+        drawBoxCrop = (DrawBoxCrop) findViewById(R.id.drawCropLines);
 
         imageView.setOnBoxChangedListener(new OnBoxChangedListener() {
             @Override
@@ -84,6 +91,10 @@ public class Photo_Crop extends Activity {
 
     public void crop(View view) {
         System.out.println("box: [" + xIni + "," + yIni +"],[" + xFin + "," + yFin + "]");
+
+        drawBoxCrop.positions.add(xIni + "," + yIni +"," + xFin + "," + yFin + "," + xFinReal + "," + yFinReal);
+        drawBoxCrop.reDraw();
+
         String pathReal = path.substring(0, path.indexOf(name)) + "Derivaciones";
         File folder = new File(pathReal);
 

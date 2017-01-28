@@ -14,7 +14,7 @@
         android:layout_height="match_parent" />
 
     <tfg.com.helpers.DrawLinesRot
-        android:id="@+id/drawViewLines"
+        android:id="@+id/drawRotLines"
         android:layout_width="match_parent"
         android:layout_height="match_parent" />
 

@@ -11,6 +11,7 @@ import android.graphics.Color;
 import android.graphics.Matrix;
 import android.os.Bundle;
 import android.preference.PreferenceManager;
+import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.Toast;
@@ -18,6 +19,7 @@ import android.widget.Toast;
 import java.io.File;
 import java.io.FileOutputStream;
 
+import tfg.com.helpers.DrawLinesRot;
 import tfg.com.helpers.SandboxView;
 
 /**
@@ -31,6 +33,7 @@ public class Photo_Rotate extends Activity{
     private String path;
     private String name;
     SandboxView sandboxView;
+    Activity act;
 
     private int numComp = 0;
 
@@ -42,6 +45,10 @@ public class Photo_Rotate extends Activity{
         Bundle extras = getIntent().getExtras();
         path = extras.getString("photoPath");
         name = extras.getString("photoName");
+
+        String pathReal = path.substring(0, path.indexOf("/" + name));
+        DrawLinesRot drawLinesRot = (DrawLinesRot) findViewById(R.id.drawRotLines);
+        drawLinesRot.path = pathReal;
 
 
         Bitmap myBitmap = BitmapFactory.decodeFile(path);
@@ -72,38 +79,15 @@ public class Photo_Rotate extends Activity{
     }
 
     public void rotate(View view) {
-        Toast.makeText(this, getString(R.string.working), Toast.LENGTH_SHORT).show();
-        Button bt = (Button) findViewById(R.id.rotateButton);
-        bt.setEnabled(false);
-        bt.setBackgroundColor(Color.parseColor("#BDBDBD"));
+        Toast.makeText(this, getString(R.string.working), Toast.LENGTH_LONG).show();
 
-        Bitmap myBitmap = BitmapFactory.decodeFile(path);
-        Bitmap rotateBitmap = RotateBitmap(myBitmap,getDegreesFromRadians(sandboxView.angle));
-        String pathReal = path.substring(0, path.indexOf("/" + name));
-        String ext = "";
-        if (name.equals("ECG.jpg")){
-            ext = ".jpg";
-        }else{
-            ext = ".png";
-        }
+        view.setEnabled(false);
+        view.setBackgroundColor(Color.parseColor("#BDBDBD"));
+        act = this;
+        PrimeThread p = new PrimeThread(view);
+        p.start();
 
-        String newName = "ECG_Rotated" + ext;
-        File fileRotate = new File(pathReal, newName);
-        try {
-            FileOutputStream fos = new FileOutputStream(fileRotate);
 
-            if (ext.equals(".jpg")) {
-                rotateBitmap.compress(Bitmap.CompressFormat.JPEG, numComp, fos);
-            } else {
-                rotateBitmap.compress(Bitmap.CompressFormat.PNG, numComp, fos);
-            }
-
-            fos.flush();
-            fos.close();
-        }catch (Exception e){
-            e.printStackTrace();
-        }
-        lanzarOptions(pathReal + "/" + newName,newName,this, bt);
     }
 
     public static Bitmap RotateBitmap(Bitmap source, float angle)
@@ -114,7 +98,7 @@ public class Photo_Rotate extends Activity{
     }
 
 
-    public void lanzarOptions(final String p, final String n, final Activity activity, Button bt) {
+    public void lanzarOptions(final String p, final String n, final Activity activity, View bt) {
         bt.setEnabled(true);
         bt.setBackgroundResource(R.drawable.mybutton);
 
@@ -131,5 +115,42 @@ public class Photo_Rotate extends Activity{
                 })
                 .setNegativeButton(getString(R.string.proccesOrnotLater), null)
                 .show();
+    }
+
+    class PrimeThread extends Thread {
+        View v;
+        PrimeThread(View view) {
+            this.v = view;
+        }
+
+        public void run() {
+            Bitmap myBitmap = BitmapFactory.decodeFile(path);
+            Bitmap rotateBitmap = RotateBitmap(myBitmap,getDegreesFromRadians(sandboxView.angle));
+            String pathReal = path.substring(0, path.indexOf("/" + name));
+            String ext = "";
+            if (name.equals("ECG.jpg")){
+                ext = ".jpg";
+            }else{
+                ext = ".png";
+            }
+
+            String newName = "ECG_Rotated" + ext;
+            File fileRotate = new File(pathReal, newName);
+            try {
+                FileOutputStream fos = new FileOutputStream(fileRotate);
+
+                if (ext.equals(".jpg")) {
+                    rotateBitmap.compress(Bitmap.CompressFormat.JPEG, numComp, fos);
+                } else {
+                    rotateBitmap.compress(Bitmap.CompressFormat.PNG, numComp, fos);
+                }
+
+                fos.flush();
+                fos.close();
+            }catch (Exception e){
+                e.printStackTrace();
+            }
+            lanzarOptions(pathReal + "/" + newName,newName, act, v);
+        }
     }
 }

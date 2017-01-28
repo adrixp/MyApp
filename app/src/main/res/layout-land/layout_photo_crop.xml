@@ -35,7 +35,7 @@
         android:background="@drawable/mybutton" />
 
     <tfg.com.helpers.DrawBoxCrop
-        android:id="@+id/drawViewLines"
+        android:id="@+id/drawCropLines"
         android:layout_width="match_parent"
         android:layout_height="match_parent" />
 
