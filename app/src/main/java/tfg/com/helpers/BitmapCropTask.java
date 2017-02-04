@@ -14,6 +14,7 @@ import java.io.File;
 import java.io.FileOutputStream;
 
 import tfg.com.myapp.Photo_Crop;
+import tfg.com.myapp.Photo_EraseMarks;
 import tfg.com.myapp.Photo_Preview;
 import tfg.com.myapp.R;
 
@@ -107,7 +108,7 @@ public class BitmapCropTask extends AsyncTask<Integer, Void, Integer> {
                         .setMessage(context.getResources().getString(R.string.proccesOrnotDer))
                         .setPositiveButton(context.getResources().getString(R.string.proccesOrnotYes), new DialogInterface.OnClickListener() {
                             public void onClick(DialogInterface dialog, int whichButton) {
-                                Intent i = new Intent(activity, Photo_Preview.class);
+                                Intent i = new Intent(activity, Photo_EraseMarks.class);
                                 i.putExtra("photoPath", newPath + "/" + prevname);
                                 i.putExtra("photoName", prevname);
                                 activity.startActivity(i);

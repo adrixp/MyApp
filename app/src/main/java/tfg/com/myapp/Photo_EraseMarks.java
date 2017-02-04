@@ -4,6 +4,7 @@ import android.app.Activity;
 import android.graphics.Color;
 import android.net.Uri;
 import android.os.Bundle;
+import android.view.View;
 import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.TextView;
@@ -36,5 +37,9 @@ public class Photo_EraseMarks extends Activity {
 
         TextView tv = (TextView) findViewById(R.id.textViewErase);
         tv.setText(name);
+    }
+
+    public void save (View view){
+
     }
 }

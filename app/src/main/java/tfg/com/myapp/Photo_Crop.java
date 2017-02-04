@@ -69,24 +69,20 @@ public class Photo_Crop extends Activity {
 
         if(notFit){ //Not whole screen on my device...
 
-            Log.i(TAG, "Traza y: Entra en notFit");
             xFinReal = bmp.getWidth();
             yFinReal = bmp.getHeight();
 
             if(bmp.getWidth() > 1920 && bmp.getWidth() < 2100){
-                Log.i(TAG, "Traza y: ancho entre 1920 y 2100 8/9");
                 xFinD = bmp.getWidth()*14/15f;
                 xIniD = bmp.getWidth()/15;
                 adjIni = xIniD;
                 adjFin = 14/15f;
             }else if(name.startsWith("ECG_")){
-                Log.i(TAG, "Traza y: Rotateds 5/6");
                 xFinD = bmp.getWidth()*5/6;
                 xIniD = bmp.getWidth()/6;
                 adjIni = xIniD;
                 adjFin = 5/6f;
             }else{
-                Log.i(TAG, "Traza y: Resto");
                 xFinD = bmp.getWidth()*7/8;
                 xIniD = bmp.getWidth()/8;
                 adjIni = xIniD;
@@ -125,14 +121,11 @@ public class Photo_Crop extends Activity {
                 yIni = y1;
                 yFin = y2;
                 if(notFit) {
-                    Log.i(TAG, "Traza y: entra en el cambiaso ");
-                    Log.i(TAG, "Traza y: adjIni= " + adjIni + " adjFin: " + adjFin);
                     xIniD = x1 + adjIni;
                     xFinD = x2 * adjFin;
                     yIniD = y1;
                     yFinD = y2;
                 }else{
-                    Log.i(TAG, "Traza y: Entra en el cambio sin ajuste ");
                     xIniD = x1;
                     xFinD = x2;
                     yIniD = y1;
@@ -147,6 +140,41 @@ public class Photo_Crop extends Activity {
 	public void onPause() {
 		super.onPause();
 	}
+
+    public void undo(View view) {
+        if(drawBoxCrop.positions.size() > 0){
+            Log.i(TAG, "Traza y: Entra al botton ");
+            drawBoxCrop.positions.remove(drawBoxCrop.positions.size() -1 );
+            drawBoxCrop.reDraw();
+
+            String pathReal = path.substring(0, path.indexOf(name)) + "Derivaciones";
+            File folder = new File(pathReal);
+
+            String ext = "";
+            if (name.endsWith(".jpg")){
+                ext = ".jpg";
+            }else if (name.endsWith(".png")){
+                ext = ".png";
+            }
+
+            int numeroDist = folder.listFiles().length/2;
+
+            Log.i(TAG, "Traza y: " + pathReal + "/Derivacion_" + numeroDist + ext);
+            Log.i(TAG, "Traza y: Grid_" + numeroDist + ext);
+            File fd = new File(pathReal + "/Derivacion_" + numeroDist + ext);
+            if(fd.exists()){
+                fd.delete();
+            }
+
+
+            File fdGrid = new File(pathReal + "/Grid_" + numeroDist + ext);
+            if(fdGrid.exists()){
+                fdGrid.delete();
+            }
+
+        }
+
+    }
 
     public void crop(View view) {
         System.out.println("box: [" + xIni + "," + yIni +"],[" + xFin + "," + yFin + "]");

@@ -110,7 +110,7 @@
     <string name="proccesOrnotTitle">Image captured!</string>
 
     <string name="proccesOrnotTitleDer">Image cropped!</string>
-    <string name="proccesOrnotDer">Would you like to see it?</string>
+    <string name="proccesOrnotDer">Would you like to erase marks?</string>
 
     <string name="grid">Use Grid</string>
     <string name="both">Both</string>
@@ -120,4 +120,5 @@
     <string name="gridSizeOp">Grid Size</string>
     <string name="lineSzSizeOp">Lines-Width</string>
     <string name="texterasebutton">Save</string>
+    <string name="textUndoButton">Undo</string>
 </resources>

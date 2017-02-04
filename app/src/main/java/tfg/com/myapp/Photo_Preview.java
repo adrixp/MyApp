@@ -51,4 +51,8 @@ public class Photo_Preview  extends Activity {
 
 
     }
+
+    public void analyze (View view){
+
+    }
 }

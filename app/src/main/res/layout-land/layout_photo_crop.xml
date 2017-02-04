@@ -22,6 +22,25 @@
             crop:crop_shadow_color="#77ffffff"/>
 
     </LinearLayout>
+
+    <tfg.com.helpers.DrawBoxCrop
+        android:id="@+id/drawCropLines"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent" />
+
+    <Button
+        android:id="@+id/undoButton"
+        android:layout_width="70dp"
+        android:layout_height="wrap_content"
+        android:onClick="undo"
+        android:layout_marginRight="5dp"
+        android:text="@string/textUndoButton"
+        android:textColor="#ffffff"
+        android:background="@drawable/mybutton"
+        android:layout_below="@+id/cropButton"
+        android:layout_alignParentEnd="true"
+        android:layout_marginTop="26dp" />
+
     <Button
         android:id="@+id/cropButton"
         android:layout_width="70dp"
@@ -30,13 +49,9 @@
         android:layout_marginRight="5dp"
         android:text="@string/textcropbutton"
         android:textColor="#ffffff"
-        android:layout_alignParentRight="true"
-        android:layout_centerVertical="true"
-        android:background="@drawable/mybutton" />
-
-    <tfg.com.helpers.DrawBoxCrop
-        android:id="@+id/drawCropLines"
-        android:layout_width="match_parent"
-        android:layout_height="match_parent" />
+        android:background="@drawable/mybutton"
+        android:layout_marginTop="118dp"
+        android:layout_alignParentTop="true"
+        android:layout_alignStart="@+id/undoButton" />
 
 </RelativeLayout>

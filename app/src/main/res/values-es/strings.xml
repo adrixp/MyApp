@@ -110,7 +110,7 @@
 	<string name="proccesOrnotTitle">Imagen capturada!</string>
 
 	<string name="proccesOrnotTitleDer">Imagen recortada!</string>
-	<string name="proccesOrnotDer">Querrías verla?</string>
+	<string name="proccesOrnotDer">Quieres borrar las marcas?</string>
 
 	<string name="grid">Rejilla</string>
 	<string name="both">Ambos</string>
@@ -120,4 +120,5 @@
 	<string name="gridSizeOp">Tamaño Rejilla</string>
 	<string name="lineSzSizeOp">Línea/Grosor</string>
 	<string name="texterasebutton">Save</string>
+	<string name="textUndoButton">Deshacer</string>
 </resources>
