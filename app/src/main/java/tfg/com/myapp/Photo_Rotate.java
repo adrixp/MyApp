@@ -1,24 +1,20 @@
 package tfg.com.myapp;
 
 import android.app.Activity;
-import android.app.AlertDialog;
-import android.content.DialogInterface;
-import android.content.Intent;
-import android.content.SharedPreferences;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.graphics.Color;
-import android.graphics.Matrix;
 import android.os.Bundle;
-import android.preference.PreferenceManager;
 import android.util.Log;
 import android.view.View;
-import android.widget.Button;
 import android.widget.Toast;
 
+import java.io.BufferedReader;
 import java.io.File;
-import java.io.FileOutputStream;
+import java.io.FileReader;
+import java.io.IOException;
 
+import tfg.com.helpers.BitmapRotateTask;
 import tfg.com.helpers.DrawLinesRot;
 import tfg.com.helpers.SandboxView;
 
@@ -33,9 +29,6 @@ public class Photo_Rotate extends Activity{
     private String path;
     private String name;
     SandboxView sandboxView;
-    Activity act;
-
-    private int numComp = 0;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -66,12 +59,6 @@ public class Photo_Rotate extends Activity{
         }else{
             sandboxView.scale = 0.80f;
         }
-
-        SharedPreferences pref = PreferenceManager
-                .getDefaultSharedPreferences(this);
-
-        numComp = Integer.parseInt(pref.getString("typeComp", "0")) * 10 + 10;
-
     }
 
     private static float getDegreesFromRadians(float angle) {
@@ -79,78 +66,39 @@ public class Photo_Rotate extends Activity{
     }
 
     public void rotate(View view) {
-        Toast.makeText(this, getString(R.string.working), Toast.LENGTH_LONG).show();
-
         view.setEnabled(false);
         view.setBackgroundColor(Color.parseColor("#BDBDBD"));
-        act = this;
-        PrimeThread p = new PrimeThread(view);
-        p.start();
 
+        String [] parts = readFile().split("\n");
+        String ext = parts[parts.length - 10].split(" ")[1];
+        int numComp = Integer.parseInt(parts[parts.length -9].split(" ")[1]);
+        String [] gridSettWyH = parts[parts.length-1].split(" ")[2].split("x");
 
+        BitmapRotateTask task = new BitmapRotateTask(path, getDegreesFromRadians(sandboxView.angle), name, numComp ,view, this, getApplicationContext(), ext, gridSettWyH);
+        task.execute(1);
+
+        Toast.makeText(this, getString(R.string.working), Toast.LENGTH_LONG).show();
     }
 
-    public static Bitmap RotateBitmap(Bitmap source, float angle)
-    {
-        Matrix matrix = new Matrix();
-        matrix.postRotate(angle);
-        return Bitmap.createBitmap(source, 0, 0, source.getWidth(), source.getHeight(), matrix, true);
-    }
+    public String readFile(){
 
+        File file = new File(path.substring(0, path.indexOf(name)), "settings.txt");
+        //Read text from file
+        String line;
+        String text = "";
 
-    public void lanzarOptions(final String p, final String n, final Activity activity, View bt) {
-        bt.setEnabled(true);
-        bt.setBackgroundResource(R.drawable.mybutton);
+        try {
+            BufferedReader br = new BufferedReader(new FileReader(file));
 
-        new AlertDialog.Builder(activity).setTitle(getString(R.string.rotated))
-                .setMessage(getString(R.string.cropOrnot))
-                .setPositiveButton(getString(R.string.proccesOrnotYes), new DialogInterface.OnClickListener() {
-                    public void onClick(DialogInterface dialog, int whichButton) {
-
-                        Intent i = new Intent(activity, Photo_Crop.class);
-                        i.putExtra("photoPath", p);
-                        i.putExtra("photoName", n);
-                        startActivity(i);
-                    }
-                })
-                .setNegativeButton(getString(R.string.proccesOrnotLater), null)
-                .show();
-    }
-
-    class PrimeThread extends Thread {
-        View v;
-        PrimeThread(View view) {
-            this.v = view;
-        }
-
-        public void run() {
-            Bitmap myBitmap = BitmapFactory.decodeFile(path);
-            Bitmap rotateBitmap = RotateBitmap(myBitmap,getDegreesFromRadians(sandboxView.angle));
-            String pathReal = path.substring(0, path.indexOf("/" + name));
-            String ext = "";
-            if (name.equals("ECG.jpg")){
-                ext = ".jpg";
-            }else{
-                ext = ".png";
+            while ((line = br.readLine()) != null) {
+                text = text + line + "\n";
             }
-
-            String newName = "ECG_Rotated" + ext;
-            File fileRotate = new File(pathReal, newName);
-            try {
-                FileOutputStream fos = new FileOutputStream(fileRotate);
-
-                if (ext.equals(".jpg")) {
-                    rotateBitmap.compress(Bitmap.CompressFormat.JPEG, numComp, fos);
-                } else {
-                    rotateBitmap.compress(Bitmap.CompressFormat.PNG, numComp, fos);
-                }
-
-                fos.flush();
-                fos.close();
-            }catch (Exception e){
-                e.printStackTrace();
-            }
-            lanzarOptions(pathReal + "/" + newName,newName, act, v);
+            br.close();
         }
+        catch (IOException e) {
+            //You'll need to add proper error handling here
+            text = "";
+        }
+        return text;
     }
 }

@@ -1,10 +1,11 @@
 package tfg.com.myapp;
 
 import android.app.Activity;
-import android.content.SharedPreferences;
+import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
 import android.graphics.Color;
 import android.os.Bundle;
-import android.preference.PreferenceManager;
+import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.Toast;
@@ -18,7 +19,7 @@ import me.littlecheesecake.croplayout.EditPhotoView;
 import me.littlecheesecake.croplayout.EditableImage;
 import me.littlecheesecake.croplayout.handler.OnBoxChangedListener;
 import me.littlecheesecake.croplayout.model.ScalableBox;
-import tfg.com.helpers.BitmapWorkerTask;
+import tfg.com.helpers.BitmapCropTask;
 import tfg.com.helpers.DrawBoxCrop;
 
 public class Photo_Crop extends Activity {
@@ -34,11 +35,17 @@ public class Photo_Crop extends Activity {
     private int xFin = 640;
     private int yFin = 880;
 
+    private float xIniD = 0f;
+    private float yIniD = 0f;
+    private float xFinD = 640f;
+    private float yFinD = 880f;
+
     private int xFinReal = 640;
     private int yFinReal = 880;
 
-    private int isJpeg = 0;
-    private int numcomp = 0;
+    private int numComp = 0;
+    private float adjIni = 0f;
+    private float adjFin = 1f;
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
@@ -49,26 +56,64 @@ public class Photo_Crop extends Activity {
 		path = extras.getString("photoPath");
 		name = extras.getString("photoName");
 
-        SharedPreferences pref = PreferenceManager
-                .getDefaultSharedPreferences(this);
-
-        numcomp = Integer.parseInt(pref.getString("typeComp", "0")) * 10 + 10;
-        isJpeg = Integer.parseInt(pref.getString("typeFormat", "0"));
-
 
         EditPhotoView imageView = (EditPhotoView) findViewById(R.id.editable_image);
         EditableImage image = new EditableImage(path);
         String [] parts = readFile().split("\n");
-        String [] partsEnd = parts[parts.length -2].split(" ")[1].split("x");
 
-        xFinReal = Integer.parseInt(partsEnd[0]);
-        yFinReal = Integer.parseInt(partsEnd[1]);
+        Bitmap bmp = BitmapFactory.decodeFile(path);
 
-        xFin = Integer.parseInt(partsEnd[0]);
-        yFin = Integer.parseInt(partsEnd[1])/3;
+        numComp = Integer.parseInt(parts[parts.length -9].split(" ")[1]);
 
-        image.setBox(new ScalableBox(0,0, xFin, yFin));
-        imageView.initView(this, image);
+        final boolean notFit = !(bmp.getWidth() == 1920);
+
+        if(notFit){ //Not whole screen on my device...
+
+            Log.i(TAG, "Traza y: Entra en notFit");
+            xFinReal = bmp.getWidth();
+            yFinReal = bmp.getHeight();
+
+            if(bmp.getWidth() > 1920 && bmp.getWidth() < 2100){
+                Log.i(TAG, "Traza y: ancho entre 1920 y 2100 8/9");
+                xFinD = bmp.getWidth()*14/15f;
+                xIniD = bmp.getWidth()/15;
+                adjIni = xIniD;
+                adjFin = 14/15f;
+            }else if(name.startsWith("ECG_")){
+                Log.i(TAG, "Traza y: Rotateds 5/6");
+                xFinD = bmp.getWidth()*5/6;
+                xIniD = bmp.getWidth()/6;
+                adjIni = xIniD;
+                adjFin = 5/6f;
+            }else{
+                Log.i(TAG, "Traza y: Resto");
+                xFinD = bmp.getWidth()*7/8;
+                xIniD = bmp.getWidth()/8;
+                adjIni = xIniD;
+                adjFin = 7/8f;
+            }
+
+            yFinD = bmp.getHeight()/3;
+
+            xFin = bmp.getWidth();
+            yFin = bmp.getHeight()/3;
+
+            image.setBox(new ScalableBox(xIni, yIni, xFin, yFin));
+            imageView.initView(this, image);
+        }else{
+            xFinReal = bmp.getWidth();
+            yFinReal = bmp.getHeight();
+
+            xFinD = bmp.getWidth();
+            yFinD = bmp.getHeight()/3;
+
+            xFin = bmp.getWidth();
+            yFin = bmp.getHeight()/3;
+
+            image.setBox(new ScalableBox(xIni, yIni, xFin, yFin));
+            imageView.initView(this, image);
+        }
+
 
         drawBoxCrop = (DrawBoxCrop) findViewById(R.id.drawCropLines);
 
@@ -79,6 +124,20 @@ public class Photo_Crop extends Activity {
                 xFin = x2;
                 yIni = y1;
                 yFin = y2;
+                if(notFit) {
+                    Log.i(TAG, "Traza y: entra en el cambiaso ");
+                    Log.i(TAG, "Traza y: adjIni= " + adjIni + " adjFin: " + adjFin);
+                    xIniD = x1 + adjIni;
+                    xFinD = x2 * adjFin;
+                    yIniD = y1;
+                    yFinD = y2;
+                }else{
+                    Log.i(TAG, "Traza y: Entra en el cambio sin ajuste ");
+                    xIniD = x1;
+                    xFinD = x2;
+                    yIniD = y1;
+                    yFinD = y2;
+                }
             }
         });
 
@@ -92,20 +151,11 @@ public class Photo_Crop extends Activity {
     public void crop(View view) {
         System.out.println("box: [" + xIni + "," + yIni +"],[" + xFin + "," + yFin + "]");
 
-        drawBoxCrop.positions.add(xIni + "," + yIni +"," + xFin + "," + yFin + "," + xFinReal + "," + yFinReal);
+        drawBoxCrop.positions.add(xIniD + "," + yIniD +"," + xFinD + "," + yFinD + "," + xFinReal + "," + yFinReal);
         drawBoxCrop.reDraw();
 
         String pathReal = path.substring(0, path.indexOf(name)) + "Derivaciones";
         File folder = new File(pathReal);
-
-        String ext = "";
-        if (name.equals("ECG.jpg")){
-            ext = ".jpg";
-            isJpeg = 1;
-        }else{
-            ext = ".png";
-            isJpeg = 0;
-        }
 
         Boolean notfailed = true;
         if(!folder.isDirectory()) {
@@ -116,6 +166,18 @@ public class Photo_Crop extends Activity {
                 System.out.println("Fallo al crear el directorio derivaciones");
                 notfailed = false;
             }
+        }
+
+        String ext = "";
+        int isJpeg = 0;
+        if (name.endsWith(".jpg")){
+            ext = ".jpg";
+            isJpeg = 1;
+        }else if (name.endsWith(".png")){
+            ext = ".png";
+            isJpeg = 0;
+        }else{
+            notfailed = false;
         }
 
         if (notfailed){
@@ -129,13 +191,18 @@ public class Photo_Crop extends Activity {
             bt.setEnabled(false);
             bt.setBackgroundColor(Color.parseColor("#BDBDBD"));
             //Recortamos la foto
-
-            BitmapWorkerTask task = new BitmapWorkerTask(path, pathReal, "Derivacion_" + numeroDist + ext, xIni, yIni, xFin, yFin, bt, false, null, "", null, numcomp, isJpeg);
+            //String ecgPath = path.substring(0, path.indexOf(name)) + "ECG" + ext;
+            BitmapCropTask task = new BitmapCropTask(path, pathReal, "Derivacion_" + numeroDist + ext, xIni, yIni, xFin, yFin, bt, false, null, "", null, numComp, isJpeg);
             task.execute(1);
 
             //Recortamos la rejilla
+            boolean isRotated = name.startsWith("ECG_");
             String gridPath = path.substring(0, path.indexOf(name)) + "Grid" + ext;
-            BitmapWorkerTask taskgrid = new BitmapWorkerTask(gridPath, pathReal, "Grid_" + numeroDist + ext, xIni, yIni, xFin, yFin, bt, true, getApplicationContext(), "Derivacion_" + numeroDist + ext, this, numcomp, isJpeg);
+            if (isRotated){
+                gridPath = path.substring(0, path.indexOf(name)) + "Grid_Rotated" + ext;
+            }
+
+            BitmapCropTask taskgrid = new BitmapCropTask(gridPath, pathReal, "Grid_" + numeroDist + ext, xIni, yIni, xFin, yFin, bt, true, getApplicationContext(), "Derivacion_" + numeroDist + ext, this, numComp, isJpeg);
             taskgrid.execute(1);
 
             Toast.makeText(this, getString(R.string.working), Toast.LENGTH_LONG).show();

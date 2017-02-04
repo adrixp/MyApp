@@ -14,13 +14,14 @@ import java.io.File;
 import java.io.FileOutputStream;
 
 import tfg.com.myapp.Photo_Crop;
+import tfg.com.myapp.Photo_Preview;
 import tfg.com.myapp.R;
 
 /**
  * Created by adria on 09/11/2016.
  */
 
-public class BitmapWorkerTask extends AsyncTask<Integer, Void, Integer> {
+public class BitmapCropTask extends AsyncTask<Integer, Void, Integer> {
     String pathImgToCrop;
     String newPath;
     String name;
@@ -30,27 +31,27 @@ public class BitmapWorkerTask extends AsyncTask<Integer, Void, Integer> {
     int yFin;
     Button bt;
     private Context context;
-    Boolean release;
+    boolean release;
     String prevname;
     Activity activity;
     int numComp;
     int isJpeg;
 
-    public BitmapWorkerTask(String mpathImgToCrop, String mnewPath, String mname, int mxIni, int myIni, int mxFin, int myFin, Button mbt, Boolean mrelease,Context mcontext, String mprevname, Activity mactivity, int mnumComp, int misJpeg) {
-        pathImgToCrop = mpathImgToCrop;
-        newPath = mnewPath;
-        name = mname;
+    public BitmapCropTask(String mPathImgToCrop, String mNewPath, String mName, int mxIni, int myIni, int mxFin, int myFin, Button mBt, boolean mRelease, Context mContext, String mPrevname, Activity mActivity, int mNumComp, int mIsJpeg) {
+        pathImgToCrop = mPathImgToCrop;
+        newPath = mNewPath;
+        name = mName;
         xIni = mxIni;
         yIni = myIni;
         xFin = mxFin;
         yFin = myFin;
-        bt = mbt;
-        release = mrelease;
-        context = mcontext;
-        prevname = mprevname;
-        activity = mactivity;
-        numComp = mnumComp;
-        isJpeg = misJpeg;
+        bt = mBt;
+        release = mRelease;
+        context = mContext;
+        prevname = mPrevname;
+        activity = mActivity;
+        numComp = mNumComp;
+        isJpeg = mIsJpeg;
     }
 
     // Decode image in background.
@@ -58,8 +59,7 @@ public class BitmapWorkerTask extends AsyncTask<Integer, Void, Integer> {
     protected Integer doInBackground(Integer... params) {
 
         try {
-            //BitmapFactory.Options options = new BitmapFactory.Options();
-            //options.inJustDecodeBounds = true;
+
             BitmapFactory.Options opts = new BitmapFactory.Options();
             opts.inJustDecodeBounds = false;
             opts.inPreferredConfig = Bitmap.Config.RGB_565;
@@ -101,15 +101,13 @@ public class BitmapWorkerTask extends AsyncTask<Integer, Void, Integer> {
         if(release){
             bt.setEnabled(true);
             bt.setBackgroundResource(R.drawable.mybutton);
-            //Toast.makeText(context, context.getResources().getString(R.string.photoCropped), Toast.LENGTH_SHORT).show();
-            System.out.println(newPath + "/" + prevname);
 
             try {
                 new AlertDialog.Builder(activity).setTitle(context.getResources().getString(R.string.proccesOrnotTitleDer))
                         .setMessage(context.getResources().getString(R.string.proccesOrnotDer))
                         .setPositiveButton(context.getResources().getString(R.string.proccesOrnotYes), new DialogInterface.OnClickListener() {
                             public void onClick(DialogInterface dialog, int whichButton) {
-                                Intent i = new Intent(activity, Photo_Crop.class);
+                                Intent i = new Intent(activity, Photo_Preview.class);
                                 i.putExtra("photoPath", newPath + "/" + prevname);
                                 i.putExtra("photoName", prevname);
                                 activity.startActivity(i);

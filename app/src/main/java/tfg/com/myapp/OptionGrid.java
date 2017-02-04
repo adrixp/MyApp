@@ -177,7 +177,7 @@ public class OptionGrid extends Activity {
                     + "Lineas Direccion: " + direccion  + "\n"
                     + "Lineas grosor: " + spinnerLineText + "\n"
                     + "Tamaño: " + width + "x" + height + "\n"
-                    +"Tamaño rejilla: " + spinnerGridText;
+                    + "Tamaño rejilla: " + spinnerGridText;
 
             try{
                 File settings = new File(path, "sharedGridOptions.txt");

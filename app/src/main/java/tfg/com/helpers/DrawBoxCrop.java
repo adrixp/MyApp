@@ -39,6 +39,7 @@ public class DrawBoxCrop extends View {
     @Override
     public void onDraw(Canvas canvas) {
         Log.i(TAG, "Traza y: canvas Width: " + canvas.getWidth() + " Height: " + canvas.getHeight());
+
         paint.setColor(Color.RED);
         paint.setStrokeWidth(8);
 

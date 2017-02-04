@@ -7,6 +7,7 @@ import android.os.Bundle;
 import android.view.View;
 import android.widget.Button;
 import android.widget.ImageView;
+import android.widget.TextView;
 
 /**
  * Created by adria on 25/01/2017.
@@ -44,6 +45,9 @@ public class Photo_Preview  extends Activity {
         }else{
             bt.setVisibility(View.INVISIBLE);
         }
+
+        TextView tv = (TextView) findViewById(R.id.textViewPrev);
+        tv.setText(name);
 
 
     }

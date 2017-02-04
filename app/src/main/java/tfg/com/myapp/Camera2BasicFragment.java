@@ -1036,12 +1036,15 @@ public class Camera2BasicFragment extends Fragment
                         //Guardamos la img
                         String namePhoto = "";
                         String nameGrid = "";
+                        String ext = "";
                         if (isJpeg == 1){
                             namePhoto = "ECG.jpg";
                             nameGrid = "Grid.jpg";
+                            ext = "jpg";
                         }else{
                             namePhoto = "ECG.png";
                             nameGrid = "Grid.png";
+                            ext = "png";
                         }
 
 
@@ -1063,14 +1066,14 @@ public class Camera2BasicFragment extends Fragment
                         //Escribimos settings en el txt
                         String dataSet = readFile();
                         dataSet = "Datos para " + namePhoto + ":\n"
-                                + "Path: " + path + "/" + namePhoto + "\n" + dataSet;
+                                + "Path: " + path + "/" + namePhoto + "\n"
+                                + "Ext: " + ext + "\n"
+                                + "Compresion: " + numcomp + "\n" + dataSet;
                         File settings = new File(path, "settings.txt");
                         FileOutputStream fos2 = new FileOutputStream(settings);
 
                         fos2.write(dataSet.getBytes());
                         fos2.close();
-
-                        //Escribimos el path
 
                         //Guardamos la rejilla
                         String settingsParts [] = dataSet.split("\n");
@@ -1100,7 +1103,6 @@ public class Camera2BasicFragment extends Fragment
                             }else{
                                 canvasToSave.drawLine(0, i*numPxH, width, i*numPxH, paint);
                             }
-
                         }
                         //Lineas Verticales
                         //             2ºigual  4ºigual
@@ -1112,7 +1114,6 @@ public class Camera2BasicFragment extends Fragment
                             }else{
                                 canvasToSave.drawLine(i*numPxW, 0, i*numPxW, height, paint);
                             }
-
                         }
 
                         File photoGrid = new File(path, nameGrid);
@@ -1124,13 +1125,10 @@ public class Camera2BasicFragment extends Fragment
                             bmpBase.compress(Bitmap.CompressFormat.PNG, numcomp, fos3);
                         }
 
-
                         fos3.flush();
                         fos3.close();
 
                         lanzarOptions(getString(R.string.proccesOrnot) , path, namePhoto);
-
-
                     }
                 }
 

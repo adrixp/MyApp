@@ -6,6 +6,7 @@ import android.net.Uri;
 import android.os.Bundle;
 import android.widget.Button;
 import android.widget.ImageView;
+import android.widget.TextView;
 
 /**
  * Created by adria on 25/01/2017.
@@ -32,5 +33,8 @@ public class Photo_EraseMarks extends Activity {
 
         Uri myUri = Uri.parse(path);
         iV.setImageURI(myUri);
+
+        TextView tv = (TextView) findViewById(R.id.textViewErase);
+        tv.setText(name);
     }
 }
