@@ -13,9 +13,7 @@ import android.widget.Button;
 import java.io.File;
 import java.io.FileOutputStream;
 
-import tfg.com.myapp.Photo_Crop;
 import tfg.com.myapp.Photo_EraseMarks;
-import tfg.com.myapp.Photo_Preview;
 import tfg.com.myapp.R;
 
 /**

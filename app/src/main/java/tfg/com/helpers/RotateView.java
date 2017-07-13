@@ -2,7 +2,6 @@ package tfg.com.helpers;
 
 import android.content.Context;
 import android.graphics.Bitmap;
-import android.graphics.BitmapFactory;
 import android.graphics.Canvas;
 import android.graphics.Matrix;
 import android.graphics.Paint;
@@ -14,9 +13,9 @@ import android.view.View.OnTouchListener;
 
 import tfg.com.math.Vector2D;
 
-public class SandboxView extends View implements OnTouchListener {
+public class RotateView extends View implements OnTouchListener {
 
-    private static final String TAG = "TFG:SandboxV:Activity";
+    private static final String TAG = "TFG:RotateView:Activity";
 
 	public Bitmap bitmap;
 	public int width;
@@ -36,17 +35,17 @@ public class SandboxView extends View implements OnTouchListener {
 	private Vector2D vpa = null;
 	private Vector2D vpb = null;
 
-	public SandboxView(Context context) {
+	public RotateView(Context context) {
 		super(context);
 
 		setOnTouchListener(this);
 	}
 
-    public SandboxView(Context context, AttributeSet attrs, int defStyle) {
+    public RotateView(Context context, AttributeSet attrs, int defStyle) {
         super(context, attrs, defStyle);
     }
 
-    public SandboxView(Context context, AttributeSet attrs) {
+    public RotateView(Context context, AttributeSet attrs) {
         super(context, attrs);
         setOnTouchListener(this);
     }
@@ -58,8 +57,6 @@ public class SandboxView extends View implements OnTouchListener {
 	@Override
 	protected void onDraw(Canvas canvas) {
         super.onDraw(canvas);
-
-        Log.i(TAG, "TRAZAX: Canvas height: " +scale);
 
 		if (!isInitialized) {
 			int w = getWidth();

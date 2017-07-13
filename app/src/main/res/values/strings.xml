@@ -120,5 +120,9 @@
     <string name="gridSizeOp">Grid Size</string>
     <string name="lineSzSizeOp">Lines-Width</string>
     <string name="texterasebutton">Save</string>
-    <string name="textUndoButton">Undo</string>
+    <string name="textUndoButton">Undo</string>textSwitchMove
+
+    <string name="textSwitchMove">Move</string>
+    <string name="textSwitchDraw">Draw</string>
+    <string name="rescale">Rescale</string>
 </resources>

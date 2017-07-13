@@ -203,7 +203,7 @@ public class File_Manager extends Activity{
 			menu.add(0, 5, 3, getString(R.string.OptionsMenuFMDelete));
 			menu.add(0, 6, 4, getString(R.string.OptionsMenuFMDeleteAll));
 			menu.add(0, 7, 5, getString(R.string.OptionsMenuFMCancel));
-        }else if(li.get(pos).getNombre().startsWith("Derivacion")){
+        }else if(li.get(pos).getNombre().startsWith("Derivacion") && !li.get(pos).getNombre().startsWith("Derivacione")){
 
             menu.setHeaderTitle(getString(R.string.OptionsMenuFMC) + " " + li.get(pos).getNombre());
             menu.add(0, 1, 0, getString(R.string.OptionsMenuFMView));
@@ -211,7 +211,7 @@ public class File_Manager extends Activity{
             menu.add(0, 5, 2, getString(R.string.OptionsMenuFMDelete));
             menu.add(0, 6, 3, getString(R.string.OptionsMenuFMDeleteAll));
             menu.add(0, 7, 4, getString(R.string.OptionsMenuFMCancel));
-        }else if(li.get(pos).getNombre().startsWith("Grid")){
+        }else if(li.get(pos).getNombre().startsWith("Grid") || li.get(pos).getNombre().startsWith("Erased_")){
 
             menu.setHeaderTitle(getString(R.string.OptionsMenuFMC) + " " + li.get(pos).getNombre());
             menu.add(0, 1, 0, getString(R.string.OptionsMenuFMView));

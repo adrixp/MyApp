@@ -5,7 +5,6 @@ import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.graphics.Color;
 import android.os.Bundle;
-import android.util.Log;
 import android.view.View;
 import android.widget.Toast;
 
@@ -16,7 +15,7 @@ import java.io.IOException;
 
 import tfg.com.helpers.BitmapRotateTask;
 import tfg.com.helpers.DrawLinesRot;
-import tfg.com.helpers.SandboxView;
+import tfg.com.helpers.RotateView;
 
 /**
  * Created by adria on 19/01/2017.
@@ -28,7 +27,7 @@ public class Photo_Rotate extends Activity{
 
     private String path;
     private String name;
-    SandboxView sandboxView;
+    RotateView rotateView;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -47,17 +46,17 @@ public class Photo_Rotate extends Activity{
         Bitmap myBitmap = BitmapFactory.decodeFile(path);
         int w = myBitmap.getWidth();
         int h = myBitmap.getHeight();
-        sandboxView = (SandboxView) findViewById(R.id.sandboxView);
-        sandboxView.bitmap = myBitmap;
-        sandboxView.height = h;
-        sandboxView.width = w;
+        rotateView = (RotateView) findViewById(R.id.sandboxView);
+        rotateView.bitmap = myBitmap;
+        rotateView.height = h;
+        rotateView.width = w;
 
         if(h > 2000 && w > 4000){
-            sandboxView.scale = 0.35f;
+            rotateView.scale = 0.35f;
         }else if(h > 1000 && w > 2000){
-            sandboxView.scale = 0.55f;
+            rotateView.scale = 0.55f;
         }else{
-            sandboxView.scale = 0.80f;
+            rotateView.scale = 0.80f;
         }
     }
 
@@ -74,7 +73,7 @@ public class Photo_Rotate extends Activity{
         int numComp = Integer.parseInt(parts[parts.length -9].split(" ")[1]);
         String [] gridSettWyH = parts[parts.length-1].split(" ")[2].split("x");
 
-        BitmapRotateTask task = new BitmapRotateTask(path, getDegreesFromRadians(sandboxView.angle), name, numComp ,view, this, getApplicationContext(), ext, gridSettWyH);
+        BitmapRotateTask task = new BitmapRotateTask(path, getDegreesFromRadians(rotateView.angle), name, numComp ,view, this, getApplicationContext(), ext, gridSettWyH);
         task.execute(1);
 
         Toast.makeText(this, getString(R.string.working), Toast.LENGTH_LONG).show();

@@ -121,4 +121,8 @@
 	<string name="lineSzSizeOp">Línea/Grosor</string>
 	<string name="texterasebutton">Save</string>
 	<string name="textUndoButton">Deshacer</string>
+
+	<string name="textSwitchMove">Mover</string>
+	<string name="textSwitchDraw">Dibujar</string>
+	<string name="rescale">Reescalar</string>
 </resources>

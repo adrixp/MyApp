@@ -8,7 +8,7 @@
     android:layout_height="match_parent">
 
 
-    <tfg.com.helpers.SandboxView
+    <tfg.com.helpers.RotateView
         android:id="@+id/sandboxView"
         android:layout_width="match_parent"
         android:layout_height="match_parent" />
