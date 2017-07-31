@@ -125,4 +125,9 @@
 	<string name="textSwitchMove">Mover</string>
 	<string name="textSwitchDraw">Dibujar</string>
 	<string name="rescale">Reescalar</string>
+	<string name="OptionsMenuFMUpload">Subir a Drive</string>
+
+	<string name="uploading">Subiendo...</string>
+	<string name="doneUpload">La imagen se subió correctamente</string>
+	<string name="errorUpload">Error: La imagen no se pudo subir</string>
 </resources>

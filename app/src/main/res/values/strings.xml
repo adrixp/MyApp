@@ -125,4 +125,9 @@
     <string name="textSwitchMove">Move</string>
     <string name="textSwitchDraw">Draw</string>
     <string name="rescale">Rescale</string>
+    <string name="OptionsMenuFMUpload">Upload</string>
+
+    <string name="uploading">Uploading...</string>
+    <string name="doneUpload">File was succesfully uploaded</string>
+    <string name="errorUpload">Error: File was unsuccesfully uploaded</string>
 </resources>

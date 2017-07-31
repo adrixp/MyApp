@@ -14,12 +14,12 @@
     </ImageView>
     <Button
         android:id="@+id/prevButton"
-        android:layout_width="70dp"
+        android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:onClick="analyze"
+        android:onClick="upload"
         android:layout_marginTop="5dp"
         android:layout_marginRight="5dp"
-        android:text="@string/OptionsMenuFMAnalyze"
+        android:text="@string/OptionsMenuFMUpload"
         android:textColor="#ffffff"
         android:layout_alignParentRight="true"
         android:layout_alignParentTop="true"

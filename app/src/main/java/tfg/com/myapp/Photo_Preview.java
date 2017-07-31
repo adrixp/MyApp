@@ -1,13 +1,18 @@
 package tfg.com.myapp;
 
 import android.app.Activity;
-import android.graphics.Color;
+import android.content.Intent;
 import android.net.Uri;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.TextView;
+
+import java.io.BufferedReader;
+import java.io.File;
+import java.io.FileReader;
+import java.io.IOException;
 
 /**
  * Created by adria on 25/01/2017.
@@ -19,6 +24,7 @@ public class Photo_Preview  extends Activity {
 
     private String path;
     private String name;
+    private int numComp;
 
 
     @Override
@@ -38,10 +44,11 @@ public class Photo_Preview  extends Activity {
 
         Button bt = (Button) findViewById(R.id.prevButton);
 
-        if(name.startsWith("Derivacion")){
-            bt.setText(getString(R.string.OptionsMenuFMAnalyze));
-            bt.setEnabled(false);
-            bt.setBackgroundColor(Color.parseColor("#BDBDBD"));
+        if(name.startsWith("Erased")){
+            bt.setText(getString(R.string.OptionsMenuFMUpload));
+            bt.setEnabled(true);
+            String [] parts = readFile().split("\n");
+            numComp = Integer.parseInt(parts[parts.length -9].split(" ")[1]);
         }else{
             bt.setVisibility(View.INVISIBLE);
         }
@@ -52,7 +59,33 @@ public class Photo_Preview  extends Activity {
 
     }
 
-    public void analyze (View view){
+    public void upload (View view){
+        Intent i = new Intent(this, Photo_Upload.class);
+        i.putExtra("photoPath", path);
+        i.putExtra("photoName", name);
+        i.putExtra("photoComp", numComp);
+        startActivity(i);
+    }
 
+    public String readFile(){
+
+        File file = new File(path.substring(0, path.indexOf("Erased Derivations/" + name)), "settings.txt");
+        //Read text from file
+        String line;
+        String text = "";
+
+        try {
+            BufferedReader br = new BufferedReader(new FileReader(file));
+
+            while ((line = br.readLine()) != null) {
+                text = text + line + "\n";
+            }
+            br.close();
+        }
+        catch (IOException e) {
+            //You'll need to add proper error handling here
+            text = "";
+        }
+        return text;
     }
 }
