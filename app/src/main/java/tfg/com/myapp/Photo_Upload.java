@@ -20,19 +20,16 @@ import com.google.android.gms.drive.Drive;
 import com.google.android.gms.drive.DriveApi.DriveContentsResult;
 import com.google.android.gms.drive.MetadataChangeSet;
 
+import java.io.BufferedReader;
 import java.io.ByteArrayOutputStream;
+import java.io.File;
+import java.io.FileReader;
 import java.io.IOException;
 import java.io.OutputStream;
-
 
 /**
  * Created by adria on 30/07/2017.
  */
-
-
-//Subir Settings
-    //Subir grid?
-    
 
 public class Photo_Upload extends Activity implements ConnectionCallbacks,
         OnConnectionFailedListener {
@@ -44,8 +41,17 @@ public class Photo_Upload extends Activity implements ConnectionCallbacks,
     private int numComp;
     private GoogleApiClient mGoogleApiClient;
 
-    private static final int RESOLVE_CONNECTION_REQUEST_CODE = 3;
-    private static final int REQUEST_CODE_CREATOR = 2;
+    private String pathSett;
+    private String textSett;
+    private String nameSett;
+
+    private String nameGrid;
+    private String pathGrid;
+
+    private static final int RESOLVE_CONNECTION_REQUEST_CODE = 1;
+    private static final int REQUEST_CODE_CREATOR_SETT = 4;
+    private static final int REQUEST_CODE_CREATOR_IMG = 2;
+    private static final int REQUEST_CODE_CREATOR_GRID = 3;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -54,21 +60,39 @@ public class Photo_Upload extends Activity implements ConnectionCallbacks,
         Bundle extras = getIntent().getExtras();
         path = extras.getString("photoPath");
         name = extras.getString("photoName");
-        numComp = extras.getInt("photoComp");
 
         setContentView(R.layout.layout_photo_upload);
 
         TextView tv = (TextView) findViewById(R.id.textViewUpload);
         tv.setText("Uploading..." + name);
 
+        //Grid
+        String endPhoto = name.substring(name.length()-5);
+        nameGrid = path.split("/")[5] + "_Grid_" + endPhoto;
+        pathGrid = path.substring(0, path.indexOf("Erased Derivations")) + "Derivaciones/Grid_"+ endPhoto;
+
+        //Settings
+        pathSett = path.substring(0, path.indexOf("Erased Derivations"));
+        textSett = readFile();
+
+        //Compresion
+        String [] parts = textSett.split("\n");
+        numComp = Integer.parseInt(parts[parts.length -9].split(" ")[1]);
+        nameSett = path.split("/")[5] + "_" + "Settings.txt";
+
+        //Foto
         name = path.split("/")[5] + "_" + name;
 
+        Log.i(TAG, "path: " + path);
+        Log.i(TAG, "pathGrid: " + pathGrid);
+        Log.i(TAG, "nameGrid: " + nameGrid);
+
         mGoogleApiClient = new GoogleApiClient.Builder(this)
-                .addApi(Drive.API)
-                .addScope(Drive.SCOPE_FILE)
-                .addConnectionCallbacks(this)
-                .addOnConnectionFailedListener(this)
-                .build();
+            .addApi(Drive.API)
+            .addScope(Drive.SCOPE_FILE)
+            .addConnectionCallbacks(this)
+            .addOnConnectionFailedListener(this)
+            .build();
     }
 
     @Override
@@ -106,10 +130,28 @@ public class Photo_Upload extends Activity implements ConnectionCallbacks,
                     mGoogleApiClient.connect();
                 }
                 break;
-            case REQUEST_CODE_CREATOR:
+            case REQUEST_CODE_CREATOR_IMG:
                 // Called after a file is saved to Drive.
                 if (resultCode == RESULT_OK) {
                     Log.i(TAG, "Image successfully saved.");
+                    Toast.makeText(getApplicationContext(),	getString(R.string.doneUpload),Toast.LENGTH_SHORT).show();
+                }else{
+                    Toast.makeText(getApplicationContext(),	getString(R.string.errorUpload),Toast.LENGTH_SHORT).show();
+                }
+                break;
+            case REQUEST_CODE_CREATOR_GRID:
+                // Called after a file is saved to Drive.
+                if (resultCode == RESULT_OK) {
+                    Log.i(TAG, "Image Grid successfully saved.");
+                    Toast.makeText(getApplicationContext(),	getString(R.string.doneUpload),Toast.LENGTH_SHORT).show();
+                }else{
+                    Toast.makeText(getApplicationContext(),	getString(R.string.errorUpload),Toast.LENGTH_SHORT).show();
+                }
+                break;
+            case REQUEST_CODE_CREATOR_SETT:
+                // Called after a file is saved to Drive.
+                if (resultCode == RESULT_OK) {
+                    Log.i(TAG, "Settings successfully saved.");
                     Toast.makeText(getApplicationContext(),	getString(R.string.doneUpload),Toast.LENGTH_SHORT).show();
                 }else{
                     Toast.makeText(getApplicationContext(),	getString(R.string.errorUpload),Toast.LENGTH_SHORT).show();
@@ -122,7 +164,9 @@ public class Photo_Upload extends Activity implements ConnectionCallbacks,
     @Override
     public void onConnected(Bundle connectionHint) {
         Log.i(TAG, "API client connected.");
-        saveFileToDrive();
+        saveFileToDrive(name, path, true, REQUEST_CODE_CREATOR_IMG, "");
+        saveFileToDrive(nameGrid, pathGrid, true, REQUEST_CODE_CREATOR_GRID, "");
+        saveFileToDrive(nameSett, pathSett, false, REQUEST_CODE_CREATOR_SETT, textSett);
     }
 
     @Override
@@ -131,11 +175,11 @@ public class Photo_Upload extends Activity implements ConnectionCallbacks,
     }
 
 
-    private void saveFileToDrive() {
+    private void saveFileToDrive(final String namePhoto, String pathPhoto, final boolean isImage, final int code, final String text) {
 
         Log.i(TAG, "Starting Saving File.");
 
-        final Bitmap image = BitmapFactory.decodeFile(path);
+        final Bitmap image = BitmapFactory.decodeFile(pathPhoto);
 
         Drive.DriveApi.newDriveContents(mGoogleApiClient)
             .setResultCallback(new ResultCallback<DriveContentsResult>() {
@@ -148,30 +192,39 @@ public class Photo_Upload extends Activity implements ConnectionCallbacks,
                     return;
                 }
 
-                // Otherwise, we can write our data to the new contents.
                 Log.i(TAG, "New contents created.");
-                // Get an output stream for the contents.
-                OutputStream outputStream = result.getDriveContents().getOutputStream();
-                // Write the bitmap data from it.
-                ByteArrayOutputStream bitmapStream = new ByteArrayOutputStream();
+                String mimeType = "";
 
-                if (name.endsWith(".jpg")){
-                    image.compress(Bitmap.CompressFormat.JPEG, numComp, bitmapStream);
+                if (isImage){
+                    OutputStream outputStream = result.getDriveContents().getOutputStream();
+                    ByteArrayOutputStream bitmapStream = new ByteArrayOutputStream();
+
+                    if (name.endsWith(".jpg")){
+                        image.compress(Bitmap.CompressFormat.JPEG, numComp, bitmapStream);
+                    }else{
+                        image.compress(Bitmap.CompressFormat.PNG, numComp, bitmapStream);
+                    }
+                    try {
+                        outputStream.write(bitmapStream.toByteArray());
+                    } catch (IOException e1) {
+                        Log.i(TAG, "Unable to write file contents.");
+                    }
+                    mimeType = "image/jpeg";
                 }else{
-                    image.compress(Bitmap.CompressFormat.PNG, numComp, bitmapStream);
-                }
 
-
-                try {
-                    outputStream.write(bitmapStream.toByteArray());
-                } catch (IOException e1) {
-                    Log.i(TAG, "Unable to write file contents.");
+                    OutputStream outputStream = result.getDriveContents().getOutputStream();
+                    try {
+                        outputStream.write(text.getBytes());
+                    } catch (IOException e1) {
+                        Log.i(TAG, "Unable to write file contents.");
+                    }
+                    mimeType = "text/plain";
                 }
 
                 // Create the initial metadata - MIME type and title.
                 // Note that the user will be able to change the title later.
                 MetadataChangeSet metadataChangeSet = new MetadataChangeSet.Builder()
-                        .setMimeType("image/jpeg").setTitle(name).build();
+                        .setMimeType(mimeType).setTitle(namePhoto).build();
                 // Create an intent for the file chooser, and start it.
                 IntentSender intentSender = Drive.DriveApi
                         .newCreateFileActivityBuilder()
@@ -180,12 +233,34 @@ public class Photo_Upload extends Activity implements ConnectionCallbacks,
                         .build(mGoogleApiClient);
                 try {
                     startIntentSenderForResult(
-                            intentSender, REQUEST_CODE_CREATOR, null, 0, 0, 0);
+                            intentSender, code, null, 0, 0, 0);
                 } catch (IntentSender.SendIntentException e) {
                     Log.i(TAG, "Failed to launch file chooser.");
                 }
                 }
             });
+    }
+
+    public String readFile(){
+
+        File file = new File(path.substring(0, path.indexOf("Erased Derivations/" + name)), "settings.txt");
+        //Read text from file
+        String line;
+        String text = "";
+
+        try {
+            BufferedReader br = new BufferedReader(new FileReader(file));
+
+            while ((line = br.readLine()) != null) {
+                text = text + line + "\n";
+            }
+            br.close();
+        }
+        catch (IOException e) {
+            //You'll need to add proper error handling here
+            text = "";
+        }
+        return text;
     }
 
 }
