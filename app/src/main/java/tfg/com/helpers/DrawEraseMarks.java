@@ -176,7 +176,7 @@ public class DrawEraseMarks extends View implements OnTouchListener {
             invalidate();
         }
         catch(Throwable t) {
-            // So lazy...
+            t.printStackTrace();
         }
         return true;
     }
